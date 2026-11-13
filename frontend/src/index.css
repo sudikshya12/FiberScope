@@ -1,0 +1,108 @@
+@import "tailwindcss";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";
+
+/* FiberScope design system — warm ivory · graphite · restrained violet.
+   Violet = interaction & selection only. Health uses ok / warn / crit / unknown + text. */
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* graphite (header, tooltips, dark badges) */
+  --color-nav: #242329;
+  --color-nav-2: #34323a;
+  --color-nav-3: #44414b;
+  --color-nav-text: #d8d5de;
+
+  --color-canvas: #f5f3ef;   /* application background (warm ivory) */
+  --color-stage: #faf9f6;    /* network canvas background */
+  --color-panel: #ffffff;    /* surfaces */
+  --color-ink: #242329;
+  --color-muted: #68656f;
+  --color-faint: #8a8692;
+  --color-line: #e3dfe8;
+  --color-line-2: #eeebf0;
+
+  --color-accent: #6941c6;
+  --color-accent-strong: #5731ae;
+  --color-accent-soft: #f0eafb;
+  --color-accent-glow: #9b7be0;
+
+  --color-warn: #986300;
+  --color-warn-soft: #fbf1de;
+  --color-crit: #be3545;
+  --color-crit-soft: #fbeaec;
+  --color-ok: #26734d;
+  --color-ok-soft: #e7f2eb;
+  --color-unknown: #77737f;
+  --color-unknown-soft: #efedf2;
+
+  --shadow-panel: 0 1px 0 rgb(36 35 41 / 0.03);
+  --shadow-lift: 0 1px 2px rgb(36 35 41 / 0.05), 0 4px 12px rgb(36 35 41 / 0.05);
+  --shadow-pop: 0 12px 36px rgb(36 35 41 / 0.14), 0 2px 6px rgb(36 35 41 / 0.06);
+
+  --animate-flow: flow 1.6s linear infinite;
+  --animate-flow-slow: flow 3.4s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+
+  @keyframes flow { to { stroke-dashoffset: -24; } }
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgb(190 53 69 / 0.32); }
+    70% { box-shadow: 0 0 0 8px rgb(190 53 69 / 0); }
+    100% { box-shadow: 0 0 0 0 rgb(190 53 69 / 0); }
+  }
+  @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+}
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body { @apply bg-canvas text-ink font-sans;  }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 6px; }
+  ::selection { background: rgb(105 65 198 / 0.18); }
+  .mono, code, kbd, pre { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-feature-settings: "zero"; }
+  .tnum { font-variant-numeric: tabular-nums; }
+}
+
+@layer components {
+  .panel { @apply bg-panel border border-line rounded-lg; box-shadow: var(--shadow-panel); }
+  .panel-head { @apply flex items-center justify-between gap-3 px-4 py-3 border-b border-line-2; }
+  .eyebrow { @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted; }
+  .skeleton { background: linear-gradient(90deg, #efedf2 25%, #f8f7fa 50%, #efedf2 75%); background-size: 200% 100%; @apply rounded-md animate-shimmer; }
+  .scroll-thin { scrollbar-width: thin; scrollbar-color: #d3cfd9 transparent; }
+  .field { @apply w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-faint transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 disabled:bg-canvas disabled:text-muted; }
+  .label { @apply mb-1 block text-xs font-medium text-muted; }
+  .grid-bg {
+    background-color: var(--color-stage);
+    background-image: radial-gradient(circle at 1px 1px, rgb(36 35 41 / 0.055) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+}
+
+/* React Flow polish */
+.react-flow__attribution { display: none; }
+.react-flow__controls { box-shadow: var(--shadow-lift) !important; border-radius: 10px; overflow: hidden; border: 1px solid var(--color-line); }
+.react-flow__controls-button { border-bottom: 1px solid var(--color-line-2) !important; width: 30px !important; height: 30px !important; }
+.react-flow__controls-button svg { fill: var(--color-muted); }
+.react-flow__handle { opacity: 0; width: 6px !important; height: 6px !important; min-width: 0 !important; min-height: 0 !important; border: 0 !important; }
+.react-flow__node:focus-visible { outline: none; }
+.react-flow__node.selected > div, .react-flow__node:focus-visible > div { box-shadow: 0 0 0 2px var(--color-accent), var(--shadow-lift); }
+.react-flow__edge-path { transition: stroke 300ms ease, stroke-width 300ms ease, opacity 300ms ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+@media print {
+  body { background: white; }
+  /* the app shell is a fixed-height, inner-scrolling layout on screen; unclip it for print */
+  .h-dvh, .h-full, .min-h-dvh { height: auto !important; min-height: 0 !important; }
+  main, .overflow-hidden, .overflow-y-auto { overflow: visible !important; }
+  .no-print { display: none !important; }
+  .print-break { break-before: page; }
+  pre { white-space: pre-wrap; word-break: break-word; }
+}

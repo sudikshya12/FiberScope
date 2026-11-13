@@ -1,0 +1,211 @@
+import { useEffect, useState, type ReactNode } from 'react'
+import { Link, NavLink, Outlet, useLocation } from 'react-router'
+import { AnimatePresence, motion } from 'motion/react'
+import clsx from 'clsx'
+import * as Menu from '@radix-ui/react-dropdown-menu'
+import * as Popover from '@radix-ui/react-popover'
+import * as RDialog from '@radix-ui/react-dialog'
+import { BookOpen, Cable, ChevronDown, Compass, Info, Menu as MenuIcon, Settings, Sun, X } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { useHealth } from '../lib/hooks'
+import { api } from '../lib/api'
+
+export function Logo({ className }: { className?: string }) {
+  // A fiber cross-section: cladding ring, core, and the signal path through it.
+  return (
+    <svg viewBox="0 0 32 32" className={className} aria-hidden>
+      <rect width="32" height="32" rx="7" fill="#242329" />
+      <path d="M3 16h6.2M22.8 16H29" stroke="#9B7BE0" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="16" cy="16" r="7.4" fill="none" stroke="#F5F3EF" strokeWidth="1.6" opacity="0.9" />
+      <circle cx="16" cy="16" r="3.1" fill="#9B7BE0" />
+    </svg>
+  )
+}
+
+const RESOURCES: { to: string; label: string; hint: string; icon: ReactNode }[] = [
+  { to: '/cables', label: 'Cable registry', hint: 'Documented cables, paths and labels', icon: <Cable className="size-4" /> },
+  { to: '/optics', label: 'Optical diagnostics', hint: 'Tx/Rx against module thresholds', icon: <Sun className="size-4" /> },
+  { to: '/learn', label: 'Troubleshooting guide', hint: 'Concepts with lab examples', icon: <BookOpen className="size-4" /> },
+  { to: '/present', label: 'Guided walkthrough', hint: 'Step-by-step scenario story', icon: <Compass className="size-4" /> },
+  { to: '/about', label: 'About & Documentation', hint: 'Source modes, limitations, setup', icon: <Info className="size-4" /> },
+]
+
+function useActive() {
+  const { pathname } = useLocation()
+  return {
+    workbench: pathname === '/' || pathname === '/lab' || /^\/investigations\/[^/]+/.test(pathname),
+    scenarios: pathname.startsWith('/scenarios'),
+    investigations: pathname === '/investigations' || pathname.startsWith('/reports'),
+    resources: RESOURCES.some((r) => pathname.startsWith(r.to)) || pathname.startsWith('/devices'),
+  }
+}
+
+const navCls = (on: boolean) =>
+  clsx(
+    'relative flex h-14 items-center px-3 text-[14px] font-medium transition-colors outline-none focus-visible:text-ink',
+    on ? 'text-ink' : 'text-muted hover:text-ink',
+  )
+
+function Underline({ on }: { on: boolean }) {
+  return on ? <motion.span layoutId="nav-underline" className="absolute inset-x-3 bottom-0 h-[2px] rounded-full bg-accent" transition={{ type: 'spring', stiffness: 520, damping: 40 }} /> : null
+}
+
+function ResourcesMenu({ on }: { on: boolean }) {
+  return (
+    <Menu.Root modal={false}>
+      <Menu.Trigger className={clsx(navCls(on), 'gap-1 data-[state=open]:text-ink')}>
+        Resources <ChevronDown className="size-3.5 transition-transform [[data-state=open]_&]:rotate-180" aria-hidden />
+        <Underline on={on} />
+      </Menu.Trigger>
+      <Menu.Portal>
+        <Menu.Content align="start" sideOffset={4} className="z-[60] w-[290px] rounded-lg border border-line bg-white p-1 shadow-[var(--shadow-pop)]">
+          {RESOURCES.map((r) => (
+            <Menu.Item key={r.to} asChild>
+              <Link to={r.to} className="flex items-start gap-3 rounded-md px-2.5 py-2 outline-none data-[highlighted]:bg-accent-soft">
+                <span className="mt-0.5 text-muted">{r.icon}</span>
+                <span>
+                  <span className="block text-[13.5px] font-medium text-ink">{r.label}</span>
+                  <span className="block text-[12px] text-muted">{r.hint}</span>
+                </span>
+              </Link>
+            </Menu.Item>
+          ))}
+        </Menu.Content>
+      </Menu.Portal>
+    </Menu.Root>
+  )
+}
+
+function SourceIndicator() {
+  const health = useHealth()
+  const lab = useQuery({ queryKey: ['lab'], queryFn: api.lab, staleTime: 30_000, retry: 0 })
+  const ok = health.data?.status === 'ok'
+  return (
+    <Popover.Root>
+      <Popover.Trigger className="flex h-8 items-center gap-2 rounded-md border border-line bg-white px-2.5 text-[12.5px] font-medium text-ink outline-none hover:border-[#cfc9d6] focus-visible:ring-2 focus-visible:ring-accent/30" aria-label={`Source mode: Simulation. API ${ok ? 'connected' : 'unreachable'}`}>
+        <span className={clsx('size-1.5 rounded-full', health.isLoading ? 'bg-faint' : ok ? 'bg-ok' : 'bg-crit')} aria-hidden />
+        Simulation
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content align="end" sideOffset={6} className="z-[60] w-[300px] rounded-lg border border-line bg-white p-4 text-[13px] shadow-[var(--shadow-pop)]">
+          <div className="mb-1 font-semibold text-ink">Source mode: Simulation</div>
+          <p className="leading-relaxed text-muted">Device output is generated by a deterministic model of North Lab Fabric. Every observation is labeled with its source — simulated evidence is never presented as real hardware.</p>
+          <dl className="mt-3 space-y-1.5 border-t border-line-2 pt-3 text-[12.5px]">
+            <div className="flex justify-between">
+              <dt className="text-muted">API</dt>
+              <dd className={ok ? 'text-ok' : 'text-crit'}>{health.isLoading ? 'checking…' : ok ? 'Connected' : 'Unreachable'}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-muted">Linux lab (optional)</dt>
+              <dd className="text-ink">{lab.data ? (lab.data.available ? 'Ready' : lab.data.enabled ? 'Not ready' : 'Disabled') : '—'}</dd>
+            </div>
+          </dl>
+          <Link to="/about#source-modes" className="mt-3 inline-block text-[12.5px] font-medium text-accent hover:underline">
+            About source modes
+          </Link>
+          <Popover.Arrow className="fill-white" />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  )
+}
+
+function MobileMenu() {
+  const [open, setOpen] = useState(false)
+  const loc = useLocation()
+  useEffect(() => setOpen(false), [loc.pathname])
+  const items = [{ to: '/', label: 'Workbench' }, { to: '/scenarios', label: 'Scenarios' }, { to: '/investigations', label: 'Investigations' }, ...RESOURCES, { to: '/settings', label: 'Settings' }]
+  return (
+    <RDialog.Root open={open} onOpenChange={setOpen}>
+      <RDialog.Trigger className="grid size-9 place-items-center rounded-md text-ink hover:bg-canvas md:hidden" aria-label="Open navigation">
+        <MenuIcon className="size-5" />
+      </RDialog.Trigger>
+      <AnimatePresence>
+        {open && (
+          <RDialog.Portal forceMount>
+            <RDialog.Overlay asChild>
+              <motion.div className="fixed inset-0 z-50 bg-[#1c1b20]/30" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
+            </RDialog.Overlay>
+            <RDialog.Content asChild>
+              <motion.nav aria-label="Main" className="fixed inset-x-0 top-0 z-50 border-b border-line bg-white px-4 pb-4 pt-3" initial={{ y: -16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -16, opacity: 0 }} transition={{ duration: 0.2 }}>
+                <div className="mb-2 flex items-center justify-between">
+                  <RDialog.Title className="flex items-center gap-2 font-semibold text-ink">
+                    <Logo className="size-7" /> FiberScope
+                  </RDialog.Title>
+                  <RDialog.Description className="sr-only">Site navigation</RDialog.Description>
+                  <RDialog.Close className="grid size-9 place-items-center rounded-md hover:bg-canvas" aria-label="Close navigation">
+                    <X className="size-5" />
+                  </RDialog.Close>
+                </div>
+                <ul className="divide-y divide-line-2">
+                  {items.map((i) => (
+                    <li key={i.to}>
+                      <NavLink to={i.to} end={i.to === '/'} className={({ isActive }) => clsx('block py-3 text-[15px]', isActive ? 'font-semibold text-accent' : 'text-ink')}>
+                        {i.label}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              </motion.nav>
+            </RDialog.Content>
+          </RDialog.Portal>
+        )}
+      </AnimatePresence>
+    </RDialog.Root>
+  )
+}
+
+export function AppShell() {
+  const loc = useLocation()
+  const active = useActive()
+  const bare = loc.pathname.startsWith('/present')
+  const fullBleed = active.workbench
+  return (
+    <div className="flex h-dvh flex-col overflow-hidden bg-canvas">
+      <a href="#main" className="sr-only z-[100] rounded bg-white px-3 py-2 focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
+        Skip to content
+      </a>
+      {!bare && (
+        <header className="no-print relative z-40 flex h-14 shrink-0 items-center gap-2 border-b border-line bg-white px-3 md:px-5">
+          <Link to="/" className="flex items-center gap-2.5 rounded-md pr-2 outline-none focus-visible:ring-2 focus-visible:ring-accent/30" aria-label="FiberScope workbench">
+            <Logo className="size-7" />
+            <span className="text-[15.5px] font-semibold tracking-tight text-ink">FiberScope</span>
+          </Link>
+          <nav aria-label="Main" className="mx-auto hidden items-center md:flex">
+            <NavLink to="/" className={navCls(active.workbench)} aria-current={active.workbench ? 'page' : undefined}>
+              Workbench
+              <Underline on={active.workbench} />
+            </NavLink>
+            <NavLink to="/scenarios" className={navCls(active.scenarios)}>
+              Scenarios
+              <Underline on={active.scenarios} />
+            </NavLink>
+            <NavLink to="/investigations" end className={navCls(active.investigations)}>
+              Investigations
+              <Underline on={active.investigations} />
+            </NavLink>
+            <ResourcesMenu on={active.resources} />
+          </nav>
+          <div className="ml-auto flex items-center gap-1.5 md:ml-0">
+            <SourceIndicator />
+            <NavLink to="/settings" aria-label="Settings" className={({ isActive }) => clsx('hidden size-8 place-items-center rounded-md transition-colors md:grid', isActive ? 'bg-accent-soft text-accent' : 'text-muted hover:bg-canvas hover:text-ink')}>
+              <Settings className="size-[18px]" />
+            </NavLink>
+            <MobileMenu />
+          </div>
+        </header>
+      )}
+      <main id="main" className={clsx('min-h-0 flex-1', fullBleed ? 'overflow-y-auto xl:overflow-hidden' : 'overflow-y-auto scroll-thin')}>
+        <AnimatePresence mode="wait">
+          <motion.div key={loc.pathname.split('/').slice(0, 2).join('/') || '/'} className="h-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.16 }}>
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
+      </main>
+    </div>
+  )
+}
+
+export function Page({ children, wide }: { children: ReactNode; wide?: boolean }) {
+  return <div className={clsx('mx-auto w-full px-4 py-6 md:px-8 md:py-8', wide ? 'max-w-[1600px]' : 'max-w-[1200px]')}>{children}</div>
+}
