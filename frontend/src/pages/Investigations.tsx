@@ -141,7 +141,7 @@ const TH = 'px-3 py-2.5 text-[11.5px] font-medium text-muted'
 
 function DesktopTable({ rows }: { rows: InvestigationSummary[] }) {
   return (
-    <div className="panel hidden overflow-x-auto scroll-thin md:block">
+    <div className="panel hidden overflow-x-auto scroll-thin lg:block">
       <table className="w-full min-w-[820px] table-fixed border-collapse text-left text-[13.5px]">
         <caption className="sr-only">Investigations, newest first</caption>
         <colgroup>
@@ -208,7 +208,7 @@ function DesktopTable({ rows }: { rows: InvestigationSummary[] }) {
 
 function MobileList({ rows }: { rows: InvestigationSummary[] }) {
   return (
-    <ul className="panel divide-y divide-line-2 md:hidden" aria-label="Investigations">
+    <ul className="panel divide-y divide-line-2 lg:hidden" aria-label="Investigations">
       {rows.map((i) => (
         <li key={i.id} className="px-4 py-3.5">
           <div className="flex items-center justify-between gap-2">

@@ -190,8 +190,8 @@ export default function Present() {
     <div className="flex h-full min-h-dvh flex-col bg-canvas">
       <header className="flex shrink-0 flex-wrap items-center gap-3 border-b border-line bg-white px-4 py-2.5 md:px-6">
         <Link to="/" aria-label="FiberScope workbench"><Logo className="size-7" /></Link>
-        <div className="min-w-0 flex-1">
-          <div className="text-[12px] text-muted">Guided walkthrough · {S.tagline}</div>
+        <div className="min-w-0 flex-1 basis-[calc(100%-3rem)] sm:basis-auto">
+          <div className="truncate text-[12px] text-muted">Guided walkthrough<span className="hidden sm:inline"> · {S.tagline}</span></div>
           <h1 className="truncate text-[16px] font-semibold text-ink">{S.title}</h1>
         </div>
         <div>
@@ -267,7 +267,7 @@ export default function Present() {
         {/* Stage */}
         <section className="flex min-h-0 min-w-0 flex-1 flex-col gap-4" aria-label="Demonstration stage">
           <div className="relative min-h-[380px] flex-[1.3] overflow-hidden rounded-lg border border-line bg-white">
-            {topo.data && <TopologyCanvas topo={topo.data} obs={obs} selection={null} onSelect={() => {}} focus={{ src: 'srv-a', dst: 'srv-b' }} compactToolbar autoTrace={story === 'optical' && step >= 4} key={`${story}-${step >= 4}`} />}
+            {topo.data && <TopologyCanvas topo={topo.data} obs={obs} selection={null} onSelect={() => {}} focus={{ src: 'srv-a', dst: 'srv-b' }} compactToolbar initialMode={typeof window !== 'undefined' && window.innerWidth < 768 ? 'list' : 'graph'} autoTrace={story === 'optical' && step >= 4} key={`${story}-${step >= 4}`} />}
           </div>
           <div className="scroll-thin min-h-[220px] flex-1 space-y-3 overflow-y-auto">
             {inv.data && (
