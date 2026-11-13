@@ -28,7 +28,8 @@ export function useInvestigation(id: string | undefined) {
   // Server-sent events: refetch the investigation when the backend records new audit events.
   const loaded = !!q.data
   useEffect(() => {
-    if (!id || !loaded || typeof EventSource === 'undefined') return
+    // Live updates via SSE; disabled on serverless hosting (VITE_ENABLE_SSE=false), where mutations refresh the cache directly.
+    if (!id || !loaded || typeof EventSource === 'undefined' || import.meta.env.VITE_ENABLE_SSE === 'false') return
     const cached = qc.getQueryData<Investigation>(qk.investigation(id))
     const after = Math.max(0, ...(cached?.timeline ?? []).map((t) => t.id))
     const es = new EventSource(`/api/investigations/${id}/events?after=${after}`)

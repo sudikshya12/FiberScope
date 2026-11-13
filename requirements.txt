@@ -1,0 +1,6 @@
+# Python dependencies for the Vercel serverless API (api/index.py). Local development uses backend/uv.lock.
+fastapi==0.162.5
+sqlalchemy==2.1.8
+pydantic==2.14.3
+httpx==0.28.1
+alembic==1.20.1
