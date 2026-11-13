@@ -1,0 +1,2281 @@
+{
+  "report_version": "fiberscope.report.v1",
+  "generated_at": "2026-11-13T08:03:28.371505+00:00",
+  "title": "Low optical receive power",
+  "investigation": {
+    "id": "INV-0012",
+    "status": "resolved",
+    "mode": "guided",
+    "created_at": "2026-11-13T07:52:55.607095+00:00",
+    "resolved_at": "2026-11-13T07:53:10.601494+00:00",
+    "abandoned_at": null,
+    "failed_verifications": 0
+  },
+  "scenario": {
+    "key": "low-rx-power",
+    "version": 1,
+    "title": "Low optical receive power",
+    "short": "DOM warning on a switch receiver; link still up.",
+    "source_mode": "SIMULATED",
+    "execution_id": "EXE-0012"
+  },
+  "network_path": {
+    "source": "cable_trace evidence EV-00091",
+    "path": {
+      "start": "srv-a:eth0",
+      "end": "asw-1:Ethernet1/1",
+      "complete": true,
+      "cables": [
+        "CBL-F101",
+        "TRK-0102-P1",
+        "CBL-F201"
+      ],
+      "mated_points": [
+        "pp-01:F01",
+        "pp-01:R01",
+        "pp-02:R01",
+        "pp-02:F01"
+      ],
+      "gap_reason": null,
+      "hops": [
+        {
+          "kind": "interface",
+          "id": "srv-a:eth0",
+          "label": "srv-a eth0",
+          "device_id": "srv-a",
+          "detail": ""
+        },
+        {
+          "kind": "cable",
+          "id": "CBL-F101",
+          "label": "CBL-F101",
+          "device_id": null,
+          "detail": "fiber \u00b7 OM4 multimode 50/125 \u00b5m \u00b7 3 m"
+        },
+        {
+          "kind": "interface",
+          "id": "pp-01:F01",
+          "label": "pp-01 F01",
+          "device_id": "pp-01",
+          "detail": ""
+        },
+        {
+          "kind": "patch_mapping",
+          "id": "pp-01:F01~pp-01:R01",
+          "label": "PP-01 F01\u21c4R01",
+          "device_id": "pp-01",
+          "detail": "passive front\u2194rear mapping (modeled)"
+        },
+        {
+          "kind": "interface",
+          "id": "pp-01:R01",
+          "label": "pp-01 R01",
+          "device_id": "pp-01",
+          "detail": ""
+        },
+        {
+          "kind": "cable",
+          "id": "TRK-0102-P1",
+          "label": "TRK-0102-P1",
+          "device_id": null,
+          "detail": "fiber \u00b7 OM4 multimode 50/125 \u00b5m \u00b7 30 m"
+        },
+        {
+          "kind": "interface",
+          "id": "pp-02:R01",
+          "label": "pp-02 R01",
+          "device_id": "pp-02",
+          "detail": ""
+        },
+        {
+          "kind": "patch_mapping",
+          "id": "pp-02:R01~pp-02:F01",
+          "label": "PP-02 R01\u21c4F01",
+          "device_id": "pp-02",
+          "detail": "passive front\u2194rear mapping (modeled)"
+        },
+        {
+          "kind": "interface",
+          "id": "pp-02:F01",
+          "label": "pp-02 F01",
+          "device_id": "pp-02",
+          "detail": ""
+        },
+        {
+          "kind": "cable",
+          "id": "CBL-F201",
+          "label": "CBL-F201",
+          "device_id": null,
+          "detail": "fiber \u00b7 OM4 multimode 50/125 \u00b5m \u00b7 2 m"
+        },
+        {
+          "kind": "interface",
+          "id": "asw-1:Ethernet1/1",
+          "label": "asw-1 Ethernet1/1",
+          "device_id": "asw-1",
+          "detail": ""
+        }
+      ],
+      "text": "srv-a eth0 \u2192 CBL-F101 \u2192 pp-01 F01 \u2192 [PP-01 F01\u21c4R01] \u2192 pp-01 R01 \u2192 TRK-0102-P1 \u2192 pp-02 R01 \u2192 [PP-02 R01\u21c4F01] \u2192 pp-02 F01 \u2192 CBL-F201 \u2192 asw-1 Ethernet1/1"
+    }
+  },
+  "initial_symptom": "Monitoring: DOM low-warning on asw-1 Ethernet1/1 receive power. No user-facing outage reported yet.",
+  "scope": "",
+  "baseline": [
+    {
+      "id": "EV-00086",
+      "title": "Optical telemetry \u2014 asw-1:Ethernet1/1 \u21c4 srv-a:eth0",
+      "collector": "optical_telemetry",
+      "phase": "baseline",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:52:55.714884+00:00",
+      "sim_time_ms": 2000,
+      "source_mode": "SIMULATED",
+      "interpretation": "asw-1:Ethernet1/1: Rx -3.10 dBm within its module thresholds. srv-a:eth0: Rx -3.50 dBm within its module thresholds. Estimated loss srv-a:eth0 \u2192 asw-1:Ethernet1/1: 1.30 dB vs. documented planning budget \u2248 1.30 dB. Estimated loss asw-1:Ethernet1/1 \u2192 srv-a:eth0: 1.30 dB vs. documented planning budget \u2248 1.30 dB.",
+      "command": "show interface Ethernet1/1 transceiver details ; [srv-a:eth0] ethtool -m eth0"
+    },
+    {
+      "id": "EV-00087",
+      "title": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d710)",
+      "collector": "reachability",
+      "phase": "baseline",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:52:55.721396+00:00",
+      "sim_time_ms": 12000,
+      "source_mode": "SIMULATED",
+      "interpretation": "All 10 probes from srv-a to 192.0.2.12 were answered (56-byte payload). This confirms IP reachability for packets of this size in both directions at the time of the test. It does not prove that larger packets, sustained throughput, or other flows work.",
+      "command": "ping -c 10 -s 56 192.0.2.12"
+    },
+    {
+      "id": "EV-00088",
+      "title": "Throughput srv-a \u2192 srv-b (10s, P1)",
+      "collector": "throughput",
+      "phase": "baseline",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:52:55.726000+00:00",
+      "sim_time_ms": 22500,
+      "source_mode": "SIMULATED",
+      "interpretation": "Average 23.31 Gbit/s over 10 s with 0 retransmissions on a 25 Gbit/s path (MSS 8960).",
+      "command": "iperf3 -c 192.0.2.12 -t 10 -P 1 --connect-timeout 3000"
+    }
+  ],
+  "diagnostic_actions": [
+    {
+      "id": "EV-00089",
+      "title": "Monitoring alarm \u2014 DOM Rx low-warning (asw-1 Ethernet1/1)",
+      "collector": "monitoring_alarm",
+      "phase": "investigation",
+      "verdict": "warning",
+      "collected_at": "2026-11-13T07:52:57.698762+00:00",
+      "sim_time_ms": 112500,
+      "source_mode": "SIMULATED",
+      "interpretation": "A monitoring threshold crossing is the trigger for investigation, not a diagnosis.",
+      "command": "dom-poller --interval 60s   # simulated monitoring"
+    },
+    {
+      "id": "EV-00090",
+      "title": "Optical telemetry \u2014 asw-1:Ethernet1/1 \u21c4 srv-a:eth0",
+      "collector": "optical_telemetry",
+      "phase": "investigation",
+      "verdict": "warning",
+      "collected_at": "2026-11-13T07:52:59.708394+00:00",
+      "sim_time_ms": 114500,
+      "source_mode": "SIMULATED",
+      "interpretation": "asw-1:Ethernet1/1: Rx -11.50 dBm is below this module's low-warning threshold (-9.90 dBm). srv-a:eth0: Rx -3.50 dBm within its module thresholds. Estimated loss srv-a:eth0 \u2192 asw-1:Ethernet1/1: 9.70 dB vs. documented planning budget \u2248 1.30 dB. Estimated loss asw-1:Ethernet1/1 \u2192 srv-a:eth0: 1.30 dB vs. documented planning budget \u2248 1.30 dB. Low receive power is evidence of a degraded optical path toward that receiver. It does not by itself identify the failed component: candidates include a contaminated or damaged connector, excess loss at a mated pair or bend, a weak remote transmitter, an incorrect optic/fiber type, or a sensor error.",
+      "command": "show interface Ethernet1/1 transceiver details ; [srv-a:eth0] ethtool -m eth0"
+    },
+    {
+      "id": "EV-00091",
+      "title": "Documented cable path \u2014 srv-a:eth0",
+      "collector": "cable_trace",
+      "phase": "investigation",
+      "verdict": "info",
+      "collected_at": "2026-11-13T07:53:02.545207+00:00",
+      "sim_time_ms": 114500,
+      "source_mode": "SIMULATED",
+      "interpretation": "Records show 3 cable segment(s) and 4 patch-panel mated connection(s) between srv-a:eth0 and asw-1:Ethernet1/1. Every mated point is a place where contamination or excess loss can occur. This is the documented path; it does not prove the physical cabling matches the records.",
+      "command": "fiberscope trace --from srv-a:eth0   # cable registry query"
+    },
+    {
+      "id": "EV-00092",
+      "title": "Connector inspection \u2014 asw-1:Ethernet1/1",
+      "collector": "connector_inspection",
+      "phase": "investigation",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:53:04.579562+00:00",
+      "sim_time_ms": 234500,
+      "source_mode": "SIMULATED",
+      "interpretation": "Inspection at asw-1:Ethernet1/1 (connector of CBL-F201) records a clean end-face. This point is unlikely to be the source of excess loss.",
+      "command": "inspection-record --location asw-1:Ethernet1/1   # recorded procedure, video probe"
+    },
+    {
+      "id": "EV-00093",
+      "title": "Connector inspection \u2014 pp-02:F01",
+      "collector": "connector_inspection",
+      "phase": "investigation",
+      "verdict": "fail",
+      "collected_at": "2026-11-13T07:53:04.601282+00:00",
+      "sim_time_ms": 354500,
+      "source_mode": "SIMULATED",
+      "interpretation": "Inspection at pp-02:F01 (connector of CBL-F201) records contamination in the core zone. Contamination at a mated pair adds loss and is a plausible cause of low receive power. Recommended procedure: clean, then re-inspect before reconnecting; re-read optics afterwards.",
+      "command": "inspection-record --location pp-02:F01   # recorded procedure, video probe"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-00086",
+      "seq": 86,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00081",
+      "phase": "baseline",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-1",
+      "collector": "optical_telemetry",
+      "title": "Optical telemetry \u2014 asw-1:Ethernet1/1 \u21c4 srv-a:eth0",
+      "target": {
+        "interface": "asw-1:Ethernet1/1"
+      },
+      "params": {},
+      "command": "show interface Ethernet1/1 transceiver details ; [srv-a:eth0] ethtool -m eth0",
+      "purpose": "Read DOM values with each module's own thresholds, from both link ends.",
+      "raw_output": "### asw-1:Ethernet1/1\n$ show interface Ethernet1/1 transceiver details\nEthernet1/1\n    transceiver is present\n    type is 25GBASE-SR\n    name is Generic (fixture)\n    part number is SFP28-SR-FX\n    serial number is FX25SR0101\n    wavelength is 850 nm\n\n               Current        Alarm High   Alarm Low    Warn High    Warn Low\n  ----------------------------------------------------------------------------\n  Temperature  37.80 C        75.00 C      -5.00 C      70.00 C      0.00 C      \n  Voltage      3.31 V         3.63 V       2.97 V       3.47 V       3.13 V      \n  Current      6.60 mA        12.00 mA     2.00 mA      11.00 mA     3.00 mA     \n  Tx Power     -2.20 dBm      3.40 dBm     -9.40 dBm    2.40 dBm     -8.40 dBm   \n  Rx Power     -3.10 dBm      3.40 dBm     -13.90 dBm   2.40 dBm     -9.90 dBm   \n  Note: ++ high-alarm, + high-warning, -- low-alarm, - low-warning\n\n### srv-a:eth0 (link peer)\n$ ethtool -m eth0\n\tIdentifier                                : 0x03 (SFP)\n\tTransceiver type                          : 25GBASE-SR\n\tVendor name                               : Generic (fixture)\n\tVendor PN                                 : SFP28-SR-FX\n\tVendor SN                                 : FX25SR0011\n\tLaser wavelength                          : 850nm\n\tLaser bias current                        : 6.800 mA\n\tLaser output power                        : 0.6607 mW / -1.80 dBm\n\tReceiver signal average optical power     : 0.4467 mW / -3.50 dBm\n\tModule temperature                        : 41.20 degrees C\n\tModule voltage                            : 3.3000 V\n\tAlarm/warning flags implemented           : Yes\n\tLaser rx power high alarm threshold   : 3.40 dBm\n\tLaser rx power low warning threshold  : -9.90 dBm\n\tLaser rx power low alarm threshold    : -13.90 dBm\n\tLaser rx power low warning            : Off\n\tLaser output power high alarm threshold   : 3.40 dBm\n\tLaser output power low warning threshold  : -8.40 dBm\n\tLaser output power low alarm threshold    : -9.40 dBm\n\tLaser output power low warning            : Off",
+      "payload": {
+        "interface": "asw-1:Ethernet1/1",
+        "peer_interface": "srv-a:eth0",
+        "local": {
+          "interface": "asw-1:Ethernet1/1",
+          "present": true,
+          "dom_supported": true,
+          "optic": {
+            "id": "OPT-A1-11",
+            "vendor": "Generic (fixture)",
+            "part_number": "SFP28-SR-FX",
+            "serial": "FX25SR0101",
+            "form_factor": "SFP28",
+            "standard": "25GBASE-SR",
+            "wavelength_nm": 850,
+            "threshold_source": "Module EEPROM alarm/warning fields (simulation fixture values)"
+          },
+          "thresholds_available": true,
+          "metrics": {
+            "tx_power_dbm": {
+              "value": -2.2,
+              "thresholds": {
+                "low_alarm": -9.4,
+                "low_warning": -8.4,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "rx_power_dbm": {
+              "value": -3.1,
+              "thresholds": {
+                "low_alarm": -13.9,
+                "low_warning": -9.9,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "temperature_c": {
+              "value": 37.8,
+              "thresholds": {
+                "low_alarm": -5.0,
+                "low_warning": 0.0,
+                "high_warning": 70.0,
+                "high_alarm": 75.0
+              },
+              "status": "normal"
+            },
+            "voltage_v": {
+              "value": 3.31,
+              "thresholds": {
+                "low_alarm": 2.97,
+                "low_warning": 3.13,
+                "high_warning": 3.47,
+                "high_alarm": 3.63
+              },
+              "status": "normal"
+            },
+            "bias_ma": {
+              "value": 6.6,
+              "thresholds": {
+                "low_alarm": 2.0,
+                "low_warning": 3.0,
+                "high_warning": 11.0,
+                "high_alarm": 12.0
+              },
+              "status": "normal"
+            }
+          },
+          "flags": {},
+          "overall": "normal"
+        },
+        "remote": {
+          "interface": "srv-a:eth0",
+          "present": true,
+          "dom_supported": true,
+          "optic": {
+            "id": "OPT-SA-E0",
+            "vendor": "Generic (fixture)",
+            "part_number": "SFP28-SR-FX",
+            "serial": "FX25SR0011",
+            "form_factor": "SFP28",
+            "standard": "25GBASE-SR",
+            "wavelength_nm": 850,
+            "threshold_source": "Module EEPROM alarm/warning fields (simulation fixture values)"
+          },
+          "thresholds_available": true,
+          "metrics": {
+            "tx_power_dbm": {
+              "value": -1.8,
+              "thresholds": {
+                "low_alarm": -9.4,
+                "low_warning": -8.4,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "rx_power_dbm": {
+              "value": -3.5,
+              "thresholds": {
+                "low_alarm": -13.9,
+                "low_warning": -9.9,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "temperature_c": {
+              "value": 41.2,
+              "thresholds": {
+                "low_alarm": -5.0,
+                "low_warning": 0.0,
+                "high_warning": 70.0,
+                "high_alarm": 75.0
+              },
+              "status": "normal"
+            },
+            "voltage_v": {
+              "value": 3.3,
+              "thresholds": {
+                "low_alarm": 2.97,
+                "low_warning": 3.13,
+                "high_warning": 3.47,
+                "high_alarm": 3.63
+              },
+              "status": "normal"
+            },
+            "bias_ma": {
+              "value": 6.8,
+              "thresholds": {
+                "low_alarm": 2.0,
+                "low_warning": 3.0,
+                "high_warning": 11.0,
+                "high_alarm": 12.0
+              },
+              "status": "normal"
+            }
+          },
+          "flags": {},
+          "overall": "normal"
+        },
+        "loss_estimates": [
+          {
+            "direction": "srv-a:eth0 \u2192 asw-1:Ethernet1/1",
+            "tx_interface": "srv-a:eth0",
+            "rx_interface": "asw-1:Ethernet1/1",
+            "tx_dbm": -1.8,
+            "rx_dbm": -3.1,
+            "estimated_loss_db": 1.3,
+            "label": "ESTIMATE from DOM readings \u2014 not an OTDR trace or certified loss test"
+          },
+          {
+            "direction": "asw-1:Ethernet1/1 \u2192 srv-a:eth0",
+            "tx_interface": "asw-1:Ethernet1/1",
+            "rx_interface": "srv-a:eth0",
+            "tx_dbm": -2.2,
+            "rx_dbm": -3.5,
+            "estimated_loss_db": 1.3,
+            "label": "ESTIMATE from DOM readings \u2014 not an OTDR trace or certified loss test"
+          }
+        ],
+        "planning_budget": {
+          "fiber_length_m": 35.0,
+          "fiber_types": [
+            "OM4 multimode 50/125 \u00b5m"
+          ],
+          "attenuation_db_per_km": 3.0,
+          "mated_pairs": 4,
+          "assumed_loss_per_mated_pair_db": 0.3,
+          "estimated_budget_db": 1.3,
+          "basis": "Documented registry lengths \u00d7 nominal attenuation + assumed mated-pair loss. A planning estimate, not a measurement."
+        },
+        "overall": "normal"
+      },
+      "interpretation": "asw-1:Ethernet1/1: Rx -3.10 dBm within its module thresholds. srv-a:eth0: Rx -3.50 dBm within its module thresholds. Estimated loss srv-a:eth0 \u2192 asw-1:Ethernet1/1: 1.30 dB vs. documented planning budget \u2248 1.30 dB. Estimated loss asw-1:Ethernet1/1 \u2192 srv-a:eth0: 1.30 dB vs. documented planning budget \u2248 1.30 dB.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "DOM readings have limited accuracy (often a few dB); compare trends and both ends rather than single absolute values.",
+        "Thresholds are per module. Where a module reports none, status is UNKNOWN \u2014 no universal thresholds are substituted.",
+        "Loss estimates pair Tx and Rx read in the same collection, same wavelength; they are not OTDR results or certified tests."
+      ],
+      "observations": [
+        {
+          "kind": "optic",
+          "id": "asw-1:Ethernet1/1",
+          "status": "up",
+          "label": "Rx -3.10 dBm"
+        },
+        {
+          "kind": "optic",
+          "id": "srv-a:eth0",
+          "status": "up",
+          "label": "Rx -3.50 dBm"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:55.714884+00:00",
+      "sim_time_ms": 2000,
+      "content_sha256": "e4d01b74c80d96b0d220d8cfb478968d1c513abc9b02cc9d5aa74fdfec8a6e04",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00087",
+      "seq": 87,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00082",
+      "phase": "baseline",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "reachability",
+      "title": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d710)",
+      "target": {
+        "src": "srv-a",
+        "dst": "srv-b"
+      },
+      "params": {
+        "count": 10,
+        "payload_bytes": 56,
+        "dont_fragment": false,
+        "ip_version": 4
+      },
+      "command": "ping -c 10 -s 56 192.0.2.12",
+      "purpose": "Test end-to-end IP reachability with ICMP echo probes.",
+      "raw_output": "PING 192.0.2.12 (192.0.2.12) 56(84) bytes of data.\n64 bytes from 192.0.2.12: icmp_seq=1 ttl=64 time=0.172 ms\n64 bytes from 192.0.2.12: icmp_seq=2 ttl=64 time=0.165 ms\n64 bytes from 192.0.2.12: icmp_seq=3 ttl=64 time=0.163 ms\n64 bytes from 192.0.2.12: icmp_seq=4 ttl=64 time=0.160 ms\n64 bytes from 192.0.2.12: icmp_seq=5 ttl=64 time=0.174 ms\n64 bytes from 192.0.2.12: icmp_seq=6 ttl=64 time=0.184 ms\n64 bytes from 192.0.2.12: icmp_seq=7 ttl=64 time=0.180 ms\n64 bytes from 192.0.2.12: icmp_seq=8 ttl=64 time=0.182 ms\n64 bytes from 192.0.2.12: icmp_seq=9 ttl=64 time=0.164 ms\n64 bytes from 192.0.2.12: icmp_seq=10 ttl=64 time=0.173 ms\n\n--- 192.0.2.12 ping statistics ---\n10 packets transmitted, 10 received, 0% packet loss, time 9012ms\nrtt min/avg/max/mdev = 0.160/0.172/0.184/0.008 ms",
+      "payload": {
+        "src": "srv-a",
+        "dst": "srv-b",
+        "src_ip": "192.0.2.11",
+        "dst_ip": "192.0.2.12",
+        "ip_version": 4,
+        "count": 10,
+        "payload_bytes": 56,
+        "packet_bytes": 84,
+        "dont_fragment": false,
+        "transmitted": 10,
+        "received": 10,
+        "errors": 0,
+        "loss_pct": 0.0,
+        "rtt_ms": {
+          "min": 0.16,
+          "avg": 0.172,
+          "max": 0.184,
+          "mdev": 0.008
+        },
+        "neighbor_resolved": true,
+        "failure_mode": "none"
+      },
+      "interpretation": "All 10 probes from srv-a to 192.0.2.12 were answered (56-byte payload). This confirms IP reachability for packets of this size in both directions at the time of the test. It does not prove that larger packets, sustained throughput, or other flows work.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "ICMP reachability shows only that echo requests/replies of this size were delivered; it is not application verification.",
+        "RTT values come from a simplified latency model; probe interval is simulated at 1 s (10 s simulated time)."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-a->srv-b",
+          "status": "up",
+          "label": "srv-a \u2192 srv-b"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:55.721396+00:00",
+      "sim_time_ms": 12000,
+      "content_sha256": "16864041a6691c5df5c53508c078a5fcbf006713677ef5465ee9976224fade32",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00088",
+      "seq": 88,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00083",
+      "phase": "baseline",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "throughput",
+      "title": "Throughput srv-a \u2192 srv-b (10s, P1)",
+      "target": {
+        "src": "srv-a",
+        "dst": "srv-b"
+      },
+      "params": {
+        "duration_s": 10,
+        "parallel": 1
+      },
+      "command": "iperf3 -c 192.0.2.12 -t 10 -P 1 --connect-timeout 3000",
+      "purpose": "Bounded TCP throughput test.",
+      "raw_output": "Connecting to host 192.0.2.12, port 5201\n[  5] local 192.0.2.11 port 43122 connected to 192.0.2.12 port 5201\n[ ID] Interval           Transfer     Bitrate         Retr\n[  5]   0.00-1.00  sec  2.92 GBytes  23.36 Gbits/sec\n[  5]   1.00-2.00  sec  2.93 GBytes  23.41 Gbits/sec\n[  5]   2.00-3.00  sec  2.90 GBytes  23.23 Gbits/sec\n[  5]   3.00-4.00  sec  2.92 GBytes  23.36 Gbits/sec\n[  5]   4.00-5.00  sec  2.91 GBytes  23.26 Gbits/sec\n[  5]   5.00-6.00  sec  2.91 GBytes  23.31 Gbits/sec\n[  5]   6.00-7.00  sec  2.92 GBytes  23.34 Gbits/sec\n[  5]   7.00-8.00  sec  2.91 GBytes  23.25 Gbits/sec\n[  5]   8.00-9.00  sec  2.93 GBytes  23.41 Gbits/sec\n[  5]   9.00-10.00  sec  2.90 GBytes  23.18 Gbits/sec\n- - - - - - - - - - - - - - - - - - - - - - - - -\n[  5]   0.00-10.00  sec  29.14 GBytes  23.31 Gbits/sec     0             sender\n[  5]   0.00-10.00  sec  29.14 GBytes  23.31 Gbits/sec                  receiver",
+      "payload": {
+        "src": "srv-a",
+        "dst": "srv-b",
+        "duration_s": 10,
+        "parallel": 1,
+        "protocol": "TCP",
+        "connected": true,
+        "sender_gbps": 23.31,
+        "receiver_gbps": 23.31,
+        "retransmits": 0,
+        "intervals": [
+          {
+            "start_s": 0,
+            "end_s": 1,
+            "gbps": 23.356
+          },
+          {
+            "start_s": 1,
+            "end_s": 2,
+            "gbps": 23.406
+          },
+          {
+            "start_s": 2,
+            "end_s": 3,
+            "gbps": 23.232
+          },
+          {
+            "start_s": 3,
+            "end_s": 4,
+            "gbps": 23.361
+          },
+          {
+            "start_s": 4,
+            "end_s": 5,
+            "gbps": 23.256
+          },
+          {
+            "start_s": 5,
+            "end_s": 6,
+            "gbps": 23.305
+          },
+          {
+            "start_s": 6,
+            "end_s": 7,
+            "gbps": 23.343
+          },
+          {
+            "start_s": 7,
+            "end_s": 8,
+            "gbps": 23.251
+          },
+          {
+            "start_s": 8,
+            "end_s": 9,
+            "gbps": 23.408
+          },
+          {
+            "start_s": 9,
+            "end_s": 10,
+            "gbps": 23.183
+          }
+        ],
+        "mss_bytes": 8960,
+        "link_speed_gbps": 25.0,
+        "stalled": false
+      },
+      "interpretation": "Average 23.31 Gbit/s over 10 s with 0 retransmissions on a 25 Gbit/s path (MSS 8960).",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Throughput is computed by a simplified model (link rate \u00d7 framing efficiency \u00d7 loss factor). It is not a prediction of real TCP behavior.",
+        "Test bounded to 10 s simulated time."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-a->srv-b",
+          "status": "up",
+          "label": "23.31 Gbit/s"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:55.726000+00:00",
+      "sim_time_ms": 22500,
+      "content_sha256": "47c899262e5d3090e89ad43e1956aea0eb018172e4ddc3e7e9129406aec3a702",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00089",
+      "seq": 89,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": null,
+      "phase": "investigation",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:monitoring",
+      "collector": "monitoring_alarm",
+      "title": "Monitoring alarm \u2014 DOM Rx low-warning (asw-1 Ethernet1/1)",
+      "target": {
+        "interface": "asw-1:Ethernet1/1"
+      },
+      "params": {
+        "poll_interval_s": 60
+      },
+      "command": "dom-poller --interval 60s   # simulated monitoring",
+      "purpose": "Simulated monitoring system polling transceiver DOM every 60 s.",
+      "raw_output": "ALARM  asw-1 Ethernet1/1  rx_power_dbm=-11.5  state=low_warning  threshold_low_warning=-9.9",
+      "payload": {
+        "interface": "asw-1:Ethernet1/1",
+        "metric": "rx_power_dbm",
+        "value": -11.5,
+        "status": "low_warning",
+        "threshold": {
+          "low_alarm": -13.9,
+          "low_warning": -9.9,
+          "high_warning": 2.4,
+          "high_alarm": 3.4
+        },
+        "poll_interval_s": 60,
+        "detected_sim_ms": 112500,
+        "fault_onset_sim_ms": 52500
+      },
+      "interpretation": "A monitoring threshold crossing is the trigger for investigation, not a diagnosis.",
+      "limitations": [
+        "Simulated monitoring poll; detection latency is bounded by the 60 s simulated poll interval."
+      ],
+      "observations": [
+        {
+          "kind": "optic",
+          "id": "asw-1:Ethernet1/1",
+          "status": "degraded",
+          "label": "DOM low-warning alarm"
+        }
+      ],
+      "verdict": "warning",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:57.698762+00:00",
+      "sim_time_ms": 112500,
+      "content_sha256": "a197272364d0a68a17af9e57138c71c580182d465e597476c98657b6df5aab8b",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00090",
+      "seq": 90,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00084",
+      "phase": "investigation",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-1",
+      "collector": "optical_telemetry",
+      "title": "Optical telemetry \u2014 asw-1:Ethernet1/1 \u21c4 srv-a:eth0",
+      "target": {
+        "interface": "asw-1:Ethernet1/1"
+      },
+      "params": {},
+      "command": "show interface Ethernet1/1 transceiver details ; [srv-a:eth0] ethtool -m eth0",
+      "purpose": "Read DOM values with each module's own thresholds, from both link ends.",
+      "raw_output": "### asw-1:Ethernet1/1\n$ show interface Ethernet1/1 transceiver details\nEthernet1/1\n    transceiver is present\n    type is 25GBASE-SR\n    name is Generic (fixture)\n    part number is SFP28-SR-FX\n    serial number is FX25SR0101\n    wavelength is 850 nm\n\n               Current        Alarm High   Alarm Low    Warn High    Warn Low\n  ----------------------------------------------------------------------------\n  Temperature  37.80 C        75.00 C      -5.00 C      70.00 C      0.00 C      \n  Voltage      3.31 V         3.63 V       2.97 V       3.47 V       3.13 V      \n  Current      6.60 mA        12.00 mA     2.00 mA      11.00 mA     3.00 mA     \n  Tx Power     -2.20 dBm      3.40 dBm     -9.40 dBm    2.40 dBm     -8.40 dBm   \n  Rx Power     -11.50 dBm     3.40 dBm     -13.90 dBm   2.40 dBm     -9.90 dBm    -\n  Note: ++ high-alarm, + high-warning, -- low-alarm, - low-warning\n\n### srv-a:eth0 (link peer)\n$ ethtool -m eth0\n\tIdentifier                                : 0x03 (SFP)\n\tTransceiver type                          : 25GBASE-SR\n\tVendor name                               : Generic (fixture)\n\tVendor PN                                 : SFP28-SR-FX\n\tVendor SN                                 : FX25SR0011\n\tLaser wavelength                          : 850nm\n\tLaser bias current                        : 6.800 mA\n\tLaser output power                        : 0.6607 mW / -1.80 dBm\n\tReceiver signal average optical power     : 0.4467 mW / -3.50 dBm\n\tModule temperature                        : 41.20 degrees C\n\tModule voltage                            : 3.3000 V\n\tAlarm/warning flags implemented           : Yes\n\tLaser rx power high alarm threshold   : 3.40 dBm\n\tLaser rx power low warning threshold  : -9.90 dBm\n\tLaser rx power low alarm threshold    : -13.90 dBm\n\tLaser rx power low warning            : Off\n\tLaser output power high alarm threshold   : 3.40 dBm\n\tLaser output power low warning threshold  : -8.40 dBm\n\tLaser output power low alarm threshold    : -9.40 dBm\n\tLaser output power low warning            : Off",
+      "payload": {
+        "interface": "asw-1:Ethernet1/1",
+        "peer_interface": "srv-a:eth0",
+        "local": {
+          "interface": "asw-1:Ethernet1/1",
+          "present": true,
+          "dom_supported": true,
+          "optic": {
+            "id": "OPT-A1-11",
+            "vendor": "Generic (fixture)",
+            "part_number": "SFP28-SR-FX",
+            "serial": "FX25SR0101",
+            "form_factor": "SFP28",
+            "standard": "25GBASE-SR",
+            "wavelength_nm": 850,
+            "threshold_source": "Module EEPROM alarm/warning fields (simulation fixture values)"
+          },
+          "thresholds_available": true,
+          "metrics": {
+            "tx_power_dbm": {
+              "value": -2.2,
+              "thresholds": {
+                "low_alarm": -9.4,
+                "low_warning": -8.4,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "rx_power_dbm": {
+              "value": -11.5,
+              "thresholds": {
+                "low_alarm": -13.9,
+                "low_warning": -9.9,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "low_warning"
+            },
+            "temperature_c": {
+              "value": 37.8,
+              "thresholds": {
+                "low_alarm": -5.0,
+                "low_warning": 0.0,
+                "high_warning": 70.0,
+                "high_alarm": 75.0
+              },
+              "status": "normal"
+            },
+            "voltage_v": {
+              "value": 3.31,
+              "thresholds": {
+                "low_alarm": 2.97,
+                "low_warning": 3.13,
+                "high_warning": 3.47,
+                "high_alarm": 3.63
+              },
+              "status": "normal"
+            },
+            "bias_ma": {
+              "value": 6.6,
+              "thresholds": {
+                "low_alarm": 2.0,
+                "low_warning": 3.0,
+                "high_warning": 11.0,
+                "high_alarm": 12.0
+              },
+              "status": "normal"
+            }
+          },
+          "flags": {},
+          "overall": "low_warning"
+        },
+        "remote": {
+          "interface": "srv-a:eth0",
+          "present": true,
+          "dom_supported": true,
+          "optic": {
+            "id": "OPT-SA-E0",
+            "vendor": "Generic (fixture)",
+            "part_number": "SFP28-SR-FX",
+            "serial": "FX25SR0011",
+            "form_factor": "SFP28",
+            "standard": "25GBASE-SR",
+            "wavelength_nm": 850,
+            "threshold_source": "Module EEPROM alarm/warning fields (simulation fixture values)"
+          },
+          "thresholds_available": true,
+          "metrics": {
+            "tx_power_dbm": {
+              "value": -1.8,
+              "thresholds": {
+                "low_alarm": -9.4,
+                "low_warning": -8.4,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "rx_power_dbm": {
+              "value": -3.5,
+              "thresholds": {
+                "low_alarm": -13.9,
+                "low_warning": -9.9,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "temperature_c": {
+              "value": 41.2,
+              "thresholds": {
+                "low_alarm": -5.0,
+                "low_warning": 0.0,
+                "high_warning": 70.0,
+                "high_alarm": 75.0
+              },
+              "status": "normal"
+            },
+            "voltage_v": {
+              "value": 3.3,
+              "thresholds": {
+                "low_alarm": 2.97,
+                "low_warning": 3.13,
+                "high_warning": 3.47,
+                "high_alarm": 3.63
+              },
+              "status": "normal"
+            },
+            "bias_ma": {
+              "value": 6.8,
+              "thresholds": {
+                "low_alarm": 2.0,
+                "low_warning": 3.0,
+                "high_warning": 11.0,
+                "high_alarm": 12.0
+              },
+              "status": "normal"
+            }
+          },
+          "flags": {},
+          "overall": "normal"
+        },
+        "loss_estimates": [
+          {
+            "direction": "srv-a:eth0 \u2192 asw-1:Ethernet1/1",
+            "tx_interface": "srv-a:eth0",
+            "rx_interface": "asw-1:Ethernet1/1",
+            "tx_dbm": -1.8,
+            "rx_dbm": -11.5,
+            "estimated_loss_db": 9.7,
+            "label": "ESTIMATE from DOM readings \u2014 not an OTDR trace or certified loss test"
+          },
+          {
+            "direction": "asw-1:Ethernet1/1 \u2192 srv-a:eth0",
+            "tx_interface": "asw-1:Ethernet1/1",
+            "rx_interface": "srv-a:eth0",
+            "tx_dbm": -2.2,
+            "rx_dbm": -3.5,
+            "estimated_loss_db": 1.3,
+            "label": "ESTIMATE from DOM readings \u2014 not an OTDR trace or certified loss test"
+          }
+        ],
+        "planning_budget": {
+          "fiber_length_m": 35.0,
+          "fiber_types": [
+            "OM4 multimode 50/125 \u00b5m"
+          ],
+          "attenuation_db_per_km": 3.0,
+          "mated_pairs": 4,
+          "assumed_loss_per_mated_pair_db": 0.3,
+          "estimated_budget_db": 1.3,
+          "basis": "Documented registry lengths \u00d7 nominal attenuation + assumed mated-pair loss. A planning estimate, not a measurement."
+        },
+        "overall": "low_warning"
+      },
+      "interpretation": "asw-1:Ethernet1/1: Rx -11.50 dBm is below this module's low-warning threshold (-9.90 dBm). srv-a:eth0: Rx -3.50 dBm within its module thresholds. Estimated loss srv-a:eth0 \u2192 asw-1:Ethernet1/1: 9.70 dB vs. documented planning budget \u2248 1.30 dB. Estimated loss asw-1:Ethernet1/1 \u2192 srv-a:eth0: 1.30 dB vs. documented planning budget \u2248 1.30 dB. Low receive power is evidence of a degraded optical path toward that receiver. It does not by itself identify the failed component: candidates include a contaminated or damaged connector, excess loss at a mated pair or bend, a weak remote transmitter, an incorrect optic/fiber type, or a sensor error.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "DOM readings have limited accuracy (often a few dB); compare trends and both ends rather than single absolute values.",
+        "Thresholds are per module. Where a module reports none, status is UNKNOWN \u2014 no universal thresholds are substituted.",
+        "Loss estimates pair Tx and Rx read in the same collection, same wavelength; they are not OTDR results or certified tests."
+      ],
+      "observations": [
+        {
+          "kind": "optic",
+          "id": "asw-1:Ethernet1/1",
+          "status": "degraded",
+          "label": "Rx -11.50 dBm"
+        },
+        {
+          "kind": "optic",
+          "id": "srv-a:eth0",
+          "status": "up",
+          "label": "Rx -3.50 dBm"
+        }
+      ],
+      "verdict": "warning",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:59.708394+00:00",
+      "sim_time_ms": 114500,
+      "content_sha256": "9e1260f0ea481fd39dee71454d48ace13bab5248a85ec5f29f51803dcc281d0b",
+      "next_steps": [
+        "Compare the remote transmitter's Tx power (is light leaving at normal power?)",
+        "Compare both directions \u2014 is only one fiber of the pair affected?",
+        "Trace the documented cable path to list every mated connection point",
+        "Inspect connector end-faces with a fiber inspection scope at each mated point (never look into a connector)",
+        "Clean only where inspection shows contamination, re-inspect, then re-read optics"
+      ]
+    },
+    {
+      "id": "EV-00091",
+      "seq": 91,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00085",
+      "phase": "investigation",
+      "source_mode": "SIMULATED",
+      "source_id": "registry:cable-inventory",
+      "collector": "cable_trace",
+      "title": "Documented cable path \u2014 srv-a:eth0",
+      "target": {
+        "interface": "srv-a:eth0"
+      },
+      "params": {},
+      "command": "fiberscope trace --from srv-a:eth0   # cable registry query",
+      "purpose": "List every documented segment and mated point along the physical path.",
+      "raw_output": "Documented path from srv-a:eth0:\n  \u25cf srv-a eth0\n  \u2502 CBL-F101   (fiber \u00b7 OM4 multimode 50/125 \u00b5m \u00b7 3 m)\n  \u25cf pp-01 F01\n  \u21c4 PP-01 F01\u21c4R01   (passive front\u2194rear mapping (modeled))\n  \u25cf pp-01 R01\n  \u2502 TRK-0102-P1   (fiber \u00b7 OM4 multimode 50/125 \u00b5m \u00b7 30 m)\n  \u25cf pp-02 R01\n  \u21c4 PP-02 R01\u21c4F01   (passive front\u2194rear mapping (modeled))\n  \u25cf pp-02 F01\n  \u2502 CBL-F201   (fiber \u00b7 OM4 multimode 50/125 \u00b5m \u00b7 2 m)\n  \u25cf asw-1 Ethernet1/1\n\nResult: complete path to asw-1:Ethernet1/1",
+      "payload": {
+        "path": {
+          "start": "srv-a:eth0",
+          "end": "asw-1:Ethernet1/1",
+          "complete": true,
+          "cables": [
+            "CBL-F101",
+            "TRK-0102-P1",
+            "CBL-F201"
+          ],
+          "mated_points": [
+            "pp-01:F01",
+            "pp-01:R01",
+            "pp-02:R01",
+            "pp-02:F01"
+          ],
+          "gap_reason": null,
+          "hops": [
+            {
+              "kind": "interface",
+              "id": "srv-a:eth0",
+              "label": "srv-a eth0",
+              "device_id": "srv-a",
+              "detail": ""
+            },
+            {
+              "kind": "cable",
+              "id": "CBL-F101",
+              "label": "CBL-F101",
+              "device_id": null,
+              "detail": "fiber \u00b7 OM4 multimode 50/125 \u00b5m \u00b7 3 m"
+            },
+            {
+              "kind": "interface",
+              "id": "pp-01:F01",
+              "label": "pp-01 F01",
+              "device_id": "pp-01",
+              "detail": ""
+            },
+            {
+              "kind": "patch_mapping",
+              "id": "pp-01:F01~pp-01:R01",
+              "label": "PP-01 F01\u21c4R01",
+              "device_id": "pp-01",
+              "detail": "passive front\u2194rear mapping (modeled)"
+            },
+            {
+              "kind": "interface",
+              "id": "pp-01:R01",
+              "label": "pp-01 R01",
+              "device_id": "pp-01",
+              "detail": ""
+            },
+            {
+              "kind": "cable",
+              "id": "TRK-0102-P1",
+              "label": "TRK-0102-P1",
+              "device_id": null,
+              "detail": "fiber \u00b7 OM4 multimode 50/125 \u00b5m \u00b7 30 m"
+            },
+            {
+              "kind": "interface",
+              "id": "pp-02:R01",
+              "label": "pp-02 R01",
+              "device_id": "pp-02",
+              "detail": ""
+            },
+            {
+              "kind": "patch_mapping",
+              "id": "pp-02:R01~pp-02:F01",
+              "label": "PP-02 R01\u21c4F01",
+              "device_id": "pp-02",
+              "detail": "passive front\u2194rear mapping (modeled)"
+            },
+            {
+              "kind": "interface",
+              "id": "pp-02:F01",
+              "label": "pp-02 F01",
+              "device_id": "pp-02",
+              "detail": ""
+            },
+            {
+              "kind": "cable",
+              "id": "CBL-F201",
+              "label": "CBL-F201",
+              "device_id": null,
+              "detail": "fiber \u00b7 OM4 multimode 50/125 \u00b5m \u00b7 2 m"
+            },
+            {
+              "kind": "interface",
+              "id": "asw-1:Ethernet1/1",
+              "label": "asw-1 Ethernet1/1",
+              "device_id": "asw-1",
+              "detail": ""
+            }
+          ],
+          "text": "srv-a eth0 \u2192 CBL-F101 \u2192 pp-01 F01 \u2192 [PP-01 F01\u21c4R01] \u2192 pp-01 R01 \u2192 TRK-0102-P1 \u2192 pp-02 R01 \u2192 [PP-02 R01\u21c4F01] \u2192 pp-02 F01 \u2192 CBL-F201 \u2192 asw-1 Ethernet1/1"
+        },
+        "modeled_cables": [
+          "CBL-F101",
+          "TRK-0102-P1",
+          "CBL-F201"
+        ],
+        "label_issues": []
+      },
+      "interpretation": "Records show 3 cable segment(s) and 4 patch-panel mated connection(s) between srv-a:eth0 and asw-1:Ethernet1/1. Every mated point is a place where contamination or excess loss can occur. This is the documented path; it does not prove the physical cabling matches the records.",
+      "limitations": [
+        "Source: documented cable registry (not a live device query).",
+        "Patch panels and trunk segments are modeled; in the Linux lab the real link is a veth pair.",
+        "Path tracing never infers missing links; gaps are reported as gaps."
+      ],
+      "observations": [
+        {
+          "kind": "trace",
+          "id": "srv-a:eth0",
+          "status": "info",
+          "label": "documented path",
+          "cables": [
+            "CBL-F101",
+            "TRK-0102-P1",
+            "CBL-F201"
+          ],
+          "mated_points": [
+            "pp-01:F01",
+            "pp-01:R01",
+            "pp-02:R01",
+            "pp-02:F01"
+          ]
+        }
+      ],
+      "verdict": "info",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:53:02.545207+00:00",
+      "sim_time_ms": 114500,
+      "content_sha256": "ec1ac6ffe188556491532ea77da94396e89f54d9ab6b505a1ddff905898dbf87",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00092",
+      "seq": 92,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00086",
+      "phase": "investigation",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:field-procedure",
+      "collector": "connector_inspection",
+      "title": "Connector inspection \u2014 asw-1:Ethernet1/1",
+      "target": {
+        "location": "asw-1:Ethernet1/1"
+      },
+      "params": {},
+      "command": "inspection-record --location asw-1:Ethernet1/1   # recorded procedure, video probe",
+      "purpose": "Record an inspection-scope check at a mated connection point.",
+      "raw_output": "Fiber inspection record (simulated) \u2014 asw-1:Ethernet1/1\nConnector: CBL-F201 at asw-1:Ethernet1/1\nTool: video inspection probe (fiber scope) \u2014 operator never looks into connectors or ports\nZone A (core):     no defects observed\nZone B (cladding): no defects observed\nZone C/D:          no defects observed\nResult: PASS",
+      "payload": {
+        "location": "asw-1:Ethernet1/1",
+        "cable": "CBL-F201",
+        "result": "PASS",
+        "zones": [
+          "Zone A (core):     no defects observed",
+          "Zone B (cladding): no defects observed",
+          "Zone C/D:          no defects observed"
+        ]
+      },
+      "interpretation": "Inspection at asw-1:Ethernet1/1 (connector of CBL-F201) records a clean end-face. This point is unlikely to be the source of excess loss.",
+      "limitations": [
+        "Simulated inspection record \u2014 in a real environment this is a physical step using a video inspection probe.",
+        "Safety: never look into a fiber connector or port; treat all fibers as potentially live."
+      ],
+      "observations": [
+        {
+          "kind": "mated_point",
+          "id": "asw-1:Ethernet1/1",
+          "status": "up",
+          "label": "scope PASS"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:53:04.579562+00:00",
+      "sim_time_ms": 234500,
+      "content_sha256": "b937971bf14a8f547191bc4c23391f419ca017d4569918af7227f4bd111a0fc8",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00093",
+      "seq": 93,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00087",
+      "phase": "investigation",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:field-procedure",
+      "collector": "connector_inspection",
+      "title": "Connector inspection \u2014 pp-02:F01",
+      "target": {
+        "location": "pp-02:F01"
+      },
+      "params": {},
+      "command": "inspection-record --location pp-02:F01   # recorded procedure, video probe",
+      "purpose": "Record an inspection-scope check at a mated connection point.",
+      "raw_output": "Fiber inspection record (simulated) \u2014 pp-02:F01\nConnector: CBL-F201 at pp-02:F01\nTool: video inspection probe (fiber scope) \u2014 operator never looks into connectors or ports\nZone A (core):     contamination observed (particulate/film)\nZone B (cladding): debris present\nZone C/D:          no defects observed\nResult: FAIL",
+      "payload": {
+        "location": "pp-02:F01",
+        "cable": "CBL-F201",
+        "result": "FAIL",
+        "zones": [
+          "Zone A (core):     contamination observed (particulate/film)",
+          "Zone B (cladding): debris present",
+          "Zone C/D:          no defects observed"
+        ]
+      },
+      "interpretation": "Inspection at pp-02:F01 (connector of CBL-F201) records contamination in the core zone. Contamination at a mated pair adds loss and is a plausible cause of low receive power. Recommended procedure: clean, then re-inspect before reconnecting; re-read optics afterwards.",
+      "limitations": [
+        "Simulated inspection record \u2014 in a real environment this is a physical step using a video inspection probe.",
+        "Safety: never look into a fiber connector or port; treat all fibers as potentially live."
+      ],
+      "observations": [
+        {
+          "kind": "mated_point",
+          "id": "pp-02:F01",
+          "status": "degraded",
+          "label": "scope FAIL"
+        }
+      ],
+      "verdict": "fail",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:53:04.601282+00:00",
+      "sim_time_ms": 354500,
+      "content_sha256": "fef02bed7893752be9f00d0d1af8dcc0212218c4ab6011dcca73ad2bc8953db7",
+      "next_steps": [
+        "Clean the connector at this point (recorded procedure)",
+        "Re-inspect, then re-read optical telemetry"
+      ]
+    },
+    {
+      "id": "EV-00094",
+      "seq": 94,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": null,
+      "phase": "repair",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:repair",
+      "collector": "repair:clean_connector",
+      "title": "Corrective action \u2014 Inspect\u2013clean\u2013reinspect at pp-02:F01 (CBL-F201)",
+      "target": {
+        "location": "pp-02:F01"
+      },
+      "params": {},
+      "command": "field-procedure clean --location pp-02:F01   # recorded step",
+      "purpose": "Record an inspect\u2013clean\u2013reinspect procedure at a mated connection point.",
+      "raw_output": "Pre-clean inspection: FAIL\nCleaned with approved one-click/lint-free method (recorded)\nPost-clean inspection: PASS",
+      "payload": {
+        "action": "clean_connector",
+        "changed_resources": [
+          "connector:pp-02:F01"
+        ],
+        "outcome": "state_changed",
+        "notes": "Post-clean inspection: PASS."
+      },
+      "interpretation": "Post-clean inspection: PASS.",
+      "limitations": [
+        "Simulated change to scenario state."
+      ],
+      "observations": [
+        {
+          "kind": "mated_point",
+          "id": "pp-02:F01",
+          "status": "up",
+          "label": "cleaned, scope PASS"
+        }
+      ],
+      "verdict": "info",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:53:08.585742+00:00",
+      "sim_time_ms": 654500,
+      "content_sha256": "91c61a0e4c0926b69ef101066cc410708f4d91ada406a5570e66a30d071b1a32",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00095",
+      "seq": 95,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00088",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-1",
+      "collector": "optical_telemetry",
+      "title": "Optical telemetry \u2014 asw-1:Ethernet1/1 \u21c4 srv-a:eth0",
+      "target": {
+        "interface": "asw-1:Ethernet1/1"
+      },
+      "params": {},
+      "command": "show interface Ethernet1/1 transceiver details ; [srv-a:eth0] ethtool -m eth0",
+      "purpose": "Read DOM values with each module's own thresholds, from both link ends.",
+      "raw_output": "### asw-1:Ethernet1/1\n$ show interface Ethernet1/1 transceiver details\nEthernet1/1\n    transceiver is present\n    type is 25GBASE-SR\n    name is Generic (fixture)\n    part number is SFP28-SR-FX\n    serial number is FX25SR0101\n    wavelength is 850 nm\n\n               Current        Alarm High   Alarm Low    Warn High    Warn Low\n  ----------------------------------------------------------------------------\n  Temperature  37.80 C        75.00 C      -5.00 C      70.00 C      0.00 C      \n  Voltage      3.31 V         3.63 V       2.97 V       3.47 V       3.13 V      \n  Current      6.60 mA        12.00 mA     2.00 mA      11.00 mA     3.00 mA     \n  Tx Power     -2.20 dBm      3.40 dBm     -9.40 dBm    2.40 dBm     -8.40 dBm   \n  Rx Power     -3.10 dBm      3.40 dBm     -13.90 dBm   2.40 dBm     -9.90 dBm   \n  Note: ++ high-alarm, + high-warning, -- low-alarm, - low-warning\n\n### srv-a:eth0 (link peer)\n$ ethtool -m eth0\n\tIdentifier                                : 0x03 (SFP)\n\tTransceiver type                          : 25GBASE-SR\n\tVendor name                               : Generic (fixture)\n\tVendor PN                                 : SFP28-SR-FX\n\tVendor SN                                 : FX25SR0011\n\tLaser wavelength                          : 850nm\n\tLaser bias current                        : 6.800 mA\n\tLaser output power                        : 0.6607 mW / -1.80 dBm\n\tReceiver signal average optical power     : 0.4467 mW / -3.50 dBm\n\tModule temperature                        : 41.20 degrees C\n\tModule voltage                            : 3.3000 V\n\tAlarm/warning flags implemented           : Yes\n\tLaser rx power high alarm threshold   : 3.40 dBm\n\tLaser rx power low warning threshold  : -9.90 dBm\n\tLaser rx power low alarm threshold    : -13.90 dBm\n\tLaser rx power low warning            : Off\n\tLaser output power high alarm threshold   : 3.40 dBm\n\tLaser output power low warning threshold  : -8.40 dBm\n\tLaser output power low alarm threshold    : -9.40 dBm\n\tLaser output power low warning            : Off",
+      "payload": {
+        "interface": "asw-1:Ethernet1/1",
+        "peer_interface": "srv-a:eth0",
+        "local": {
+          "interface": "asw-1:Ethernet1/1",
+          "present": true,
+          "dom_supported": true,
+          "optic": {
+            "id": "OPT-A1-11",
+            "vendor": "Generic (fixture)",
+            "part_number": "SFP28-SR-FX",
+            "serial": "FX25SR0101",
+            "form_factor": "SFP28",
+            "standard": "25GBASE-SR",
+            "wavelength_nm": 850,
+            "threshold_source": "Module EEPROM alarm/warning fields (simulation fixture values)"
+          },
+          "thresholds_available": true,
+          "metrics": {
+            "tx_power_dbm": {
+              "value": -2.2,
+              "thresholds": {
+                "low_alarm": -9.4,
+                "low_warning": -8.4,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "rx_power_dbm": {
+              "value": -3.1,
+              "thresholds": {
+                "low_alarm": -13.9,
+                "low_warning": -9.9,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "temperature_c": {
+              "value": 37.8,
+              "thresholds": {
+                "low_alarm": -5.0,
+                "low_warning": 0.0,
+                "high_warning": 70.0,
+                "high_alarm": 75.0
+              },
+              "status": "normal"
+            },
+            "voltage_v": {
+              "value": 3.31,
+              "thresholds": {
+                "low_alarm": 2.97,
+                "low_warning": 3.13,
+                "high_warning": 3.47,
+                "high_alarm": 3.63
+              },
+              "status": "normal"
+            },
+            "bias_ma": {
+              "value": 6.6,
+              "thresholds": {
+                "low_alarm": 2.0,
+                "low_warning": 3.0,
+                "high_warning": 11.0,
+                "high_alarm": 12.0
+              },
+              "status": "normal"
+            }
+          },
+          "flags": {},
+          "overall": "normal"
+        },
+        "remote": {
+          "interface": "srv-a:eth0",
+          "present": true,
+          "dom_supported": true,
+          "optic": {
+            "id": "OPT-SA-E0",
+            "vendor": "Generic (fixture)",
+            "part_number": "SFP28-SR-FX",
+            "serial": "FX25SR0011",
+            "form_factor": "SFP28",
+            "standard": "25GBASE-SR",
+            "wavelength_nm": 850,
+            "threshold_source": "Module EEPROM alarm/warning fields (simulation fixture values)"
+          },
+          "thresholds_available": true,
+          "metrics": {
+            "tx_power_dbm": {
+              "value": -1.8,
+              "thresholds": {
+                "low_alarm": -9.4,
+                "low_warning": -8.4,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "rx_power_dbm": {
+              "value": -3.5,
+              "thresholds": {
+                "low_alarm": -13.9,
+                "low_warning": -9.9,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "temperature_c": {
+              "value": 41.2,
+              "thresholds": {
+                "low_alarm": -5.0,
+                "low_warning": 0.0,
+                "high_warning": 70.0,
+                "high_alarm": 75.0
+              },
+              "status": "normal"
+            },
+            "voltage_v": {
+              "value": 3.3,
+              "thresholds": {
+                "low_alarm": 2.97,
+                "low_warning": 3.13,
+                "high_warning": 3.47,
+                "high_alarm": 3.63
+              },
+              "status": "normal"
+            },
+            "bias_ma": {
+              "value": 6.8,
+              "thresholds": {
+                "low_alarm": 2.0,
+                "low_warning": 3.0,
+                "high_warning": 11.0,
+                "high_alarm": 12.0
+              },
+              "status": "normal"
+            }
+          },
+          "flags": {},
+          "overall": "normal"
+        },
+        "loss_estimates": [
+          {
+            "direction": "srv-a:eth0 \u2192 asw-1:Ethernet1/1",
+            "tx_interface": "srv-a:eth0",
+            "rx_interface": "asw-1:Ethernet1/1",
+            "tx_dbm": -1.8,
+            "rx_dbm": -3.1,
+            "estimated_loss_db": 1.3,
+            "label": "ESTIMATE from DOM readings \u2014 not an OTDR trace or certified loss test"
+          },
+          {
+            "direction": "asw-1:Ethernet1/1 \u2192 srv-a:eth0",
+            "tx_interface": "asw-1:Ethernet1/1",
+            "rx_interface": "srv-a:eth0",
+            "tx_dbm": -2.2,
+            "rx_dbm": -3.5,
+            "estimated_loss_db": 1.3,
+            "label": "ESTIMATE from DOM readings \u2014 not an OTDR trace or certified loss test"
+          }
+        ],
+        "planning_budget": {
+          "fiber_length_m": 35.0,
+          "fiber_types": [
+            "OM4 multimode 50/125 \u00b5m"
+          ],
+          "attenuation_db_per_km": 3.0,
+          "mated_pairs": 4,
+          "assumed_loss_per_mated_pair_db": 0.3,
+          "estimated_budget_db": 1.3,
+          "basis": "Documented registry lengths \u00d7 nominal attenuation + assumed mated-pair loss. A planning estimate, not a measurement."
+        },
+        "overall": "normal"
+      },
+      "interpretation": "asw-1:Ethernet1/1: Rx -3.10 dBm within its module thresholds. srv-a:eth0: Rx -3.50 dBm within its module thresholds. Estimated loss srv-a:eth0 \u2192 asw-1:Ethernet1/1: 1.30 dB vs. documented planning budget \u2248 1.30 dB. Estimated loss asw-1:Ethernet1/1 \u2192 srv-a:eth0: 1.30 dB vs. documented planning budget \u2248 1.30 dB.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "DOM readings have limited accuracy (often a few dB); compare trends and both ends rather than single absolute values.",
+        "Thresholds are per module. Where a module reports none, status is UNKNOWN \u2014 no universal thresholds are substituted.",
+        "Loss estimates pair Tx and Rx read in the same collection, same wavelength; they are not OTDR results or certified tests."
+      ],
+      "observations": [
+        {
+          "kind": "optic",
+          "id": "asw-1:Ethernet1/1",
+          "status": "up",
+          "label": "Rx -3.10 dBm"
+        },
+        {
+          "kind": "optic",
+          "id": "srv-a:eth0",
+          "status": "up",
+          "label": "Rx -3.50 dBm"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:53:10.574814+00:00",
+      "sim_time_ms": 656500,
+      "content_sha256": "da69c58a7ba3a496e59edbc66c1ea254b0e890f391c8b6ca7df79e4a2a8f4723",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00096",
+      "seq": 96,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00089",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-1",
+      "collector": "optical_telemetry",
+      "title": "Optical telemetry \u2014 asw-1:Ethernet1/1 \u21c4 srv-a:eth0",
+      "target": {
+        "interface": "asw-1:Ethernet1/1"
+      },
+      "params": {},
+      "command": "show interface Ethernet1/1 transceiver details ; [srv-a:eth0] ethtool -m eth0",
+      "purpose": "Read DOM values with each module's own thresholds, from both link ends.",
+      "raw_output": "### asw-1:Ethernet1/1\n$ show interface Ethernet1/1 transceiver details\nEthernet1/1\n    transceiver is present\n    type is 25GBASE-SR\n    name is Generic (fixture)\n    part number is SFP28-SR-FX\n    serial number is FX25SR0101\n    wavelength is 850 nm\n\n               Current        Alarm High   Alarm Low    Warn High    Warn Low\n  ----------------------------------------------------------------------------\n  Temperature  37.80 C        75.00 C      -5.00 C      70.00 C      0.00 C      \n  Voltage      3.31 V         3.63 V       2.97 V       3.47 V       3.13 V      \n  Current      6.60 mA        12.00 mA     2.00 mA      11.00 mA     3.00 mA     \n  Tx Power     -2.20 dBm      3.40 dBm     -9.40 dBm    2.40 dBm     -8.40 dBm   \n  Rx Power     -3.10 dBm      3.40 dBm     -13.90 dBm   2.40 dBm     -9.90 dBm   \n  Note: ++ high-alarm, + high-warning, -- low-alarm, - low-warning\n\n### srv-a:eth0 (link peer)\n$ ethtool -m eth0\n\tIdentifier                                : 0x03 (SFP)\n\tTransceiver type                          : 25GBASE-SR\n\tVendor name                               : Generic (fixture)\n\tVendor PN                                 : SFP28-SR-FX\n\tVendor SN                                 : FX25SR0011\n\tLaser wavelength                          : 850nm\n\tLaser bias current                        : 6.800 mA\n\tLaser output power                        : 0.6607 mW / -1.80 dBm\n\tReceiver signal average optical power     : 0.4467 mW / -3.50 dBm\n\tModule temperature                        : 41.20 degrees C\n\tModule voltage                            : 3.3000 V\n\tAlarm/warning flags implemented           : Yes\n\tLaser rx power high alarm threshold   : 3.40 dBm\n\tLaser rx power low warning threshold  : -9.90 dBm\n\tLaser rx power low alarm threshold    : -13.90 dBm\n\tLaser rx power low warning            : Off\n\tLaser output power high alarm threshold   : 3.40 dBm\n\tLaser output power low warning threshold  : -8.40 dBm\n\tLaser output power low alarm threshold    : -9.40 dBm\n\tLaser output power low warning            : Off",
+      "payload": {
+        "interface": "asw-1:Ethernet1/1",
+        "peer_interface": "srv-a:eth0",
+        "local": {
+          "interface": "asw-1:Ethernet1/1",
+          "present": true,
+          "dom_supported": true,
+          "optic": {
+            "id": "OPT-A1-11",
+            "vendor": "Generic (fixture)",
+            "part_number": "SFP28-SR-FX",
+            "serial": "FX25SR0101",
+            "form_factor": "SFP28",
+            "standard": "25GBASE-SR",
+            "wavelength_nm": 850,
+            "threshold_source": "Module EEPROM alarm/warning fields (simulation fixture values)"
+          },
+          "thresholds_available": true,
+          "metrics": {
+            "tx_power_dbm": {
+              "value": -2.2,
+              "thresholds": {
+                "low_alarm": -9.4,
+                "low_warning": -8.4,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "rx_power_dbm": {
+              "value": -3.1,
+              "thresholds": {
+                "low_alarm": -13.9,
+                "low_warning": -9.9,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "temperature_c": {
+              "value": 37.8,
+              "thresholds": {
+                "low_alarm": -5.0,
+                "low_warning": 0.0,
+                "high_warning": 70.0,
+                "high_alarm": 75.0
+              },
+              "status": "normal"
+            },
+            "voltage_v": {
+              "value": 3.31,
+              "thresholds": {
+                "low_alarm": 2.97,
+                "low_warning": 3.13,
+                "high_warning": 3.47,
+                "high_alarm": 3.63
+              },
+              "status": "normal"
+            },
+            "bias_ma": {
+              "value": 6.6,
+              "thresholds": {
+                "low_alarm": 2.0,
+                "low_warning": 3.0,
+                "high_warning": 11.0,
+                "high_alarm": 12.0
+              },
+              "status": "normal"
+            }
+          },
+          "flags": {},
+          "overall": "normal"
+        },
+        "remote": {
+          "interface": "srv-a:eth0",
+          "present": true,
+          "dom_supported": true,
+          "optic": {
+            "id": "OPT-SA-E0",
+            "vendor": "Generic (fixture)",
+            "part_number": "SFP28-SR-FX",
+            "serial": "FX25SR0011",
+            "form_factor": "SFP28",
+            "standard": "25GBASE-SR",
+            "wavelength_nm": 850,
+            "threshold_source": "Module EEPROM alarm/warning fields (simulation fixture values)"
+          },
+          "thresholds_available": true,
+          "metrics": {
+            "tx_power_dbm": {
+              "value": -1.8,
+              "thresholds": {
+                "low_alarm": -9.4,
+                "low_warning": -8.4,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "rx_power_dbm": {
+              "value": -3.5,
+              "thresholds": {
+                "low_alarm": -13.9,
+                "low_warning": -9.9,
+                "high_warning": 2.4,
+                "high_alarm": 3.4
+              },
+              "status": "normal"
+            },
+            "temperature_c": {
+              "value": 41.2,
+              "thresholds": {
+                "low_alarm": -5.0,
+                "low_warning": 0.0,
+                "high_warning": 70.0,
+                "high_alarm": 75.0
+              },
+              "status": "normal"
+            },
+            "voltage_v": {
+              "value": 3.3,
+              "thresholds": {
+                "low_alarm": 2.97,
+                "low_warning": 3.13,
+                "high_warning": 3.47,
+                "high_alarm": 3.63
+              },
+              "status": "normal"
+            },
+            "bias_ma": {
+              "value": 6.8,
+              "thresholds": {
+                "low_alarm": 2.0,
+                "low_warning": 3.0,
+                "high_warning": 11.0,
+                "high_alarm": 12.0
+              },
+              "status": "normal"
+            }
+          },
+          "flags": {},
+          "overall": "normal"
+        },
+        "loss_estimates": [
+          {
+            "direction": "srv-a:eth0 \u2192 asw-1:Ethernet1/1",
+            "tx_interface": "srv-a:eth0",
+            "rx_interface": "asw-1:Ethernet1/1",
+            "tx_dbm": -1.8,
+            "rx_dbm": -3.1,
+            "estimated_loss_db": 1.3,
+            "label": "ESTIMATE from DOM readings \u2014 not an OTDR trace or certified loss test"
+          },
+          {
+            "direction": "asw-1:Ethernet1/1 \u2192 srv-a:eth0",
+            "tx_interface": "asw-1:Ethernet1/1",
+            "rx_interface": "srv-a:eth0",
+            "tx_dbm": -2.2,
+            "rx_dbm": -3.5,
+            "estimated_loss_db": 1.3,
+            "label": "ESTIMATE from DOM readings \u2014 not an OTDR trace or certified loss test"
+          }
+        ],
+        "planning_budget": {
+          "fiber_length_m": 35.0,
+          "fiber_types": [
+            "OM4 multimode 50/125 \u00b5m"
+          ],
+          "attenuation_db_per_km": 3.0,
+          "mated_pairs": 4,
+          "assumed_loss_per_mated_pair_db": 0.3,
+          "estimated_budget_db": 1.3,
+          "basis": "Documented registry lengths \u00d7 nominal attenuation + assumed mated-pair loss. A planning estimate, not a measurement."
+        },
+        "overall": "normal"
+      },
+      "interpretation": "asw-1:Ethernet1/1: Rx -3.10 dBm within its module thresholds. srv-a:eth0: Rx -3.50 dBm within its module thresholds. Estimated loss srv-a:eth0 \u2192 asw-1:Ethernet1/1: 1.30 dB vs. documented planning budget \u2248 1.30 dB. Estimated loss asw-1:Ethernet1/1 \u2192 srv-a:eth0: 1.30 dB vs. documented planning budget \u2248 1.30 dB.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "DOM readings have limited accuracy (often a few dB); compare trends and both ends rather than single absolute values.",
+        "Thresholds are per module. Where a module reports none, status is UNKNOWN \u2014 no universal thresholds are substituted.",
+        "Loss estimates pair Tx and Rx read in the same collection, same wavelength; they are not OTDR results or certified tests."
+      ],
+      "observations": [
+        {
+          "kind": "optic",
+          "id": "asw-1:Ethernet1/1",
+          "status": "up",
+          "label": "Rx -3.10 dBm"
+        },
+        {
+          "kind": "optic",
+          "id": "srv-a:eth0",
+          "status": "up",
+          "label": "Rx -3.50 dBm"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:53:10.577759+00:00",
+      "sim_time_ms": 658500,
+      "content_sha256": "9bdfcf8530a31d8642bbaa298bf4c2fc73b8238764260b31c3f3f56bbe084d57",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00097",
+      "seq": 97,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00090",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-1",
+      "collector": "interface_state",
+      "title": "Interface state \u2014 asw-1:Ethernet1/1",
+      "target": {
+        "interface": "asw-1:Ethernet1/1"
+      },
+      "params": {},
+      "command": "show interface Ethernet1/1",
+      "purpose": "Read administrative and operational state separately.",
+      "raw_output": "Ethernet1/1 is up\n  admin state is up\n  Description: srv-a eth0 via PP-02 F01\n  Hardware: 25000 Mbps fiber, address: 02:00:5e:21:01:01\n  MTU 9216 bytes\n  Port mode is access, access VLAN 20\n  Link state: Link up\n  Last link flapped: never",
+      "payload": {
+        "interface": "asw-1:Ethernet1/1",
+        "device": "asw-1",
+        "admin_state": "up",
+        "oper_state": "up",
+        "reason": "Link up",
+        "mtu": 9216,
+        "intended_mtu": 9216,
+        "mode": "access",
+        "running_vlan": 20,
+        "running_allowed_vlans": null,
+        "intended_vlan": 20,
+        "speed_gbps": 25.0,
+        "carrier": true
+      },
+      "interpretation": "asw-1:Ethernet1/1 is administratively UP and operationally UP \u2014 the physical link is established at this port. A link that is up does not prove Layer 2/3 forwarding is correct.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Observes this end only; the far end may report a different view."
+      ],
+      "observations": [
+        {
+          "kind": "interface",
+          "id": "asw-1:Ethernet1/1",
+          "status": "up",
+          "label": "admin up / oper up",
+          "mtu": 9216
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:53:10.580344+00:00",
+      "sim_time_ms": 659500,
+      "content_sha256": "4e5075f4b39fc994f3cd4e2301cda161d8b64e085387a6d3059d480bad02297d",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00098",
+      "seq": 98,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00091",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "interface_state",
+      "title": "Interface state \u2014 srv-a:eth0",
+      "target": {
+        "interface": "srv-a:eth0"
+      },
+      "params": {},
+      "command": "ip -d link show dev eth0; ethtool eth0 | grep -E 'Speed|Link detected'",
+      "purpose": "Read administrative and operational state separately.",
+      "raw_output": "2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9000 qdisc mq state UP mode DEFAULT group default qlen 1000\n    link/ether 02:00:5e:10:00:11 brd ff:ff:ff:ff:ff:ff\n\tSpeed: 25000Mb/s\n\tLink detected: yes",
+      "payload": {
+        "interface": "srv-a:eth0",
+        "device": "srv-a",
+        "admin_state": "up",
+        "oper_state": "up",
+        "reason": "Link up",
+        "mtu": 9000,
+        "intended_mtu": 9000,
+        "mode": null,
+        "running_vlan": null,
+        "running_allowed_vlans": null,
+        "intended_vlan": null,
+        "speed_gbps": 25.0,
+        "carrier": true
+      },
+      "interpretation": "srv-a:eth0 is administratively UP and operationally UP \u2014 the physical link is established at this port. A link that is up does not prove Layer 2/3 forwarding is correct.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Observes this end only; the far end may report a different view."
+      ],
+      "observations": [
+        {
+          "kind": "interface",
+          "id": "srv-a:eth0",
+          "status": "up",
+          "label": "admin up / oper up",
+          "mtu": 9000
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:53:10.582278+00:00",
+      "sim_time_ms": 660500,
+      "content_sha256": "5ee7c2e8ab49de43c59d63a42494d74c91d29f3c7379ad569a0c75a35e7a0eae",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00099",
+      "seq": 99,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00092",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "reachability",
+      "title": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d710)",
+      "target": {
+        "src": "srv-a",
+        "dst": "srv-b"
+      },
+      "params": {
+        "count": 10,
+        "payload_bytes": 56,
+        "dont_fragment": false,
+        "ip_version": 4
+      },
+      "command": "ping -c 10 -s 56 192.0.2.12",
+      "purpose": "Test end-to-end IP reachability with ICMP echo probes.",
+      "raw_output": "PING 192.0.2.12 (192.0.2.12) 56(84) bytes of data.\n64 bytes from 192.0.2.12: icmp_seq=1 ttl=64 time=0.163 ms\n64 bytes from 192.0.2.12: icmp_seq=2 ttl=64 time=0.160 ms\n64 bytes from 192.0.2.12: icmp_seq=3 ttl=64 time=0.156 ms\n64 bytes from 192.0.2.12: icmp_seq=4 ttl=64 time=0.183 ms\n64 bytes from 192.0.2.12: icmp_seq=5 ttl=64 time=0.184 ms\n64 bytes from 192.0.2.12: icmp_seq=6 ttl=64 time=0.159 ms\n64 bytes from 192.0.2.12: icmp_seq=7 ttl=64 time=0.184 ms\n64 bytes from 192.0.2.12: icmp_seq=8 ttl=64 time=0.163 ms\n64 bytes from 192.0.2.12: icmp_seq=9 ttl=64 time=0.165 ms\n64 bytes from 192.0.2.12: icmp_seq=10 ttl=64 time=0.191 ms\n\n--- 192.0.2.12 ping statistics ---\n10 packets transmitted, 10 received, 0% packet loss, time 9012ms\nrtt min/avg/max/mdev = 0.156/0.171/0.191/0.012 ms",
+      "payload": {
+        "src": "srv-a",
+        "dst": "srv-b",
+        "src_ip": "192.0.2.11",
+        "dst_ip": "192.0.2.12",
+        "ip_version": 4,
+        "count": 10,
+        "payload_bytes": 56,
+        "packet_bytes": 84,
+        "dont_fragment": false,
+        "transmitted": 10,
+        "received": 10,
+        "errors": 0,
+        "loss_pct": 0.0,
+        "rtt_ms": {
+          "min": 0.156,
+          "avg": 0.171,
+          "max": 0.191,
+          "mdev": 0.012
+        },
+        "neighbor_resolved": true,
+        "failure_mode": "none"
+      },
+      "interpretation": "All 10 probes from srv-a to 192.0.2.12 were answered (56-byte payload). This confirms IP reachability for packets of this size in both directions at the time of the test. It does not prove that larger packets, sustained throughput, or other flows work.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "ICMP reachability shows only that echo requests/replies of this size were delivered; it is not application verification.",
+        "RTT values come from a simplified latency model; probe interval is simulated at 1 s (10 s simulated time)."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-a->srv-b",
+          "status": "up",
+          "label": "srv-a \u2192 srv-b"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:53:10.585300+00:00",
+      "sim_time_ms": 670500,
+      "content_sha256": "6acd96098c75afeff271afee5352e30fe2e2968328331e1064765d75dc3182da",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00100",
+      "seq": 100,
+      "investigation_id": "INV-0012",
+      "execution_id": "EXE-0012",
+      "diagnostic_run_id": "DR-00093",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "throughput",
+      "title": "Throughput srv-a \u2192 srv-b (10s, P1)",
+      "target": {
+        "src": "srv-a",
+        "dst": "srv-b"
+      },
+      "params": {
+        "duration_s": 10,
+        "parallel": 1
+      },
+      "command": "iperf3 -c 192.0.2.12 -t 10 -P 1 --connect-timeout 3000",
+      "purpose": "Bounded TCP throughput test.",
+      "raw_output": "Connecting to host 192.0.2.12, port 5201\n[  5] local 192.0.2.11 port 43122 connected to 192.0.2.12 port 5201\n[ ID] Interval           Transfer     Bitrate         Retr\n[  5]   0.00-1.00  sec  2.93 GBytes  23.41 Gbits/sec\n[  5]   1.00-2.00  sec  2.91 GBytes  23.29 Gbits/sec\n[  5]   2.00-3.00  sec  2.92 GBytes  23.37 Gbits/sec\n[  5]   3.00-4.00  sec  2.91 GBytes  23.29 Gbits/sec\n[  5]   4.00-5.00  sec  2.91 GBytes  23.24 Gbits/sec\n[  5]   5.00-6.00  sec  2.90 GBytes  23.20 Gbits/sec\n[  5]   6.00-7.00  sec  2.92 GBytes  23.33 Gbits/sec\n[  5]   7.00-8.00  sec  2.92 GBytes  23.38 Gbits/sec\n[  5]   8.00-9.00  sec  2.92 GBytes  23.33 Gbits/sec\n[  5]   9.00-10.00  sec  2.90 GBytes  23.22 Gbits/sec\n- - - - - - - - - - - - - - - - - - - - - - - - -\n[  5]   0.00-10.00  sec  29.13 GBytes  23.31 Gbits/sec     0             sender\n[  5]   0.00-10.00  sec  29.13 GBytes  23.31 Gbits/sec                  receiver",
+      "payload": {
+        "src": "srv-a",
+        "dst": "srv-b",
+        "duration_s": 10,
+        "parallel": 1,
+        "protocol": "TCP",
+        "connected": true,
+        "sender_gbps": 23.306,
+        "receiver_gbps": 23.306,
+        "retransmits": 0,
+        "intervals": [
+          {
+            "start_s": 0,
+            "end_s": 1,
+            "gbps": 23.406
+          },
+          {
+            "start_s": 1,
+            "end_s": 2,
+            "gbps": 23.295
+          },
+          {
+            "start_s": 2,
+            "end_s": 3,
+            "gbps": 23.368
+          },
+          {
+            "start_s": 3,
+            "end_s": 4,
+            "gbps": 23.294
+          },
+          {
+            "start_s": 4,
+            "end_s": 5,
+            "gbps": 23.242
+          },
+          {
+            "start_s": 5,
+            "end_s": 6,
+            "gbps": 23.198
+          },
+          {
+            "start_s": 6,
+            "end_s": 7,
+            "gbps": 23.326
+          },
+          {
+            "start_s": 7,
+            "end_s": 8,
+            "gbps": 23.376
+          },
+          {
+            "start_s": 8,
+            "end_s": 9,
+            "gbps": 23.333
+          },
+          {
+            "start_s": 9,
+            "end_s": 10,
+            "gbps": 23.219
+          }
+        ],
+        "mss_bytes": 8960,
+        "link_speed_gbps": 25.0,
+        "stalled": false
+      },
+      "interpretation": "Average 23.31 Gbit/s over 10 s with 0 retransmissions on a 25 Gbit/s path (MSS 8960).",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Throughput is computed by a simplified model (link rate \u00d7 framing efficiency \u00d7 loss factor). It is not a prediction of real TCP behavior.",
+        "Test bounded to 10 s simulated time."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-a->srv-b",
+          "status": "up",
+          "label": "23.31 Gbit/s"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:53:10.587283+00:00",
+      "sim_time_ms": 681000,
+      "content_sha256": "c3645e05f9bee74ad1056e90530bf052dfbe07627c3a60cc986795e930ea8f7a",
+      "next_steps": []
+    }
+  ],
+  "hypotheses": [],
+  "diagnosis": {
+    "category": "optical_path_degraded",
+    "category_label": "Degraded optical path (low Rx power)",
+    "statement": "Excess loss on the srv-a \u2192 asw-1 fiber. Scope inspection failed at PP-02 F01 (CBL-F201 end); other inspected points passed.",
+    "recorded_at": "2026-11-13T07:53:06.599680+00:00",
+    "cited_evidence": [
+      {
+        "id": "EV-00090",
+        "title": "Optical telemetry \u2014 asw-1:Ethernet1/1 \u21c4 srv-a:eth0",
+        "verdict": "warning"
+      },
+      {
+        "id": "EV-00091",
+        "title": "Documented cable path \u2014 srv-a:eth0",
+        "verdict": "info"
+      },
+      {
+        "id": "EV-00092",
+        "title": "Connector inspection \u2014 asw-1:Ethernet1/1",
+        "verdict": "ok"
+      },
+      {
+        "id": "EV-00093",
+        "title": "Connector inspection \u2014 pp-02:F01",
+        "verdict": "fail"
+      }
+    ]
+  },
+  "corrective_actions": [
+    {
+      "id": "RPR-0005",
+      "action": "clean_connector",
+      "target": {
+        "location": "pp-02:F01"
+      },
+      "params": {},
+      "description": "Inspect\u2013clean\u2013reinspect at pp-02:F01 (CBL-F201)",
+      "command": "field-procedure clean --location pp-02:F01   # recorded step",
+      "source_mode": "SIMULATED",
+      "changed_resources": [
+        "connector:pp-02:F01"
+      ],
+      "outcome": "state_changed",
+      "notes": "Post-clean inspection: PASS.",
+      "evidence_id": "EV-00094",
+      "applied_at": "2026-11-13T07:53:08.586330+00:00",
+      "sim_time_ms": 654500
+    }
+  ],
+  "verification": [
+    {
+      "id": "VR-0005",
+      "started_at": "2026-11-13T07:53:10.573989+00:00",
+      "completed_at": "2026-11-13T07:53:10.588946+00:00",
+      "passed": true,
+      "checks": [
+        {
+          "id": "rx_thresholds",
+          "label": "Rx power within module thresholds",
+          "rationale": "Both ends of the link report Rx inside their own thresholds (unknown thresholds never count as pass).",
+          "passed": true,
+          "detail": "asw-1:Ethernet1/1 Rx -3.10 dBm normal; srv-a:eth0 Rx -3.50 dBm normal",
+          "evidence_ids": [
+            "EV-00095"
+          ]
+        },
+        {
+          "id": "loss_budget",
+          "label": "Estimated loss near planning budget",
+          "rationale": "Directional loss estimate \u2264 documented budget + 1.5 dB.",
+          "passed": true,
+          "detail": "worst direction srv-a:eth0 \u2192 asw-1:Ethernet1/1: 1.30 dB (estimate) vs budget 1.30 dB + 1.5 dB margin",
+          "evidence_ids": [
+            "EV-00096"
+          ]
+        },
+        {
+          "id": "link",
+          "label": "Link state",
+          "rationale": "Both ends admin/oper up.",
+          "passed": true,
+          "detail": "asw-1:Ethernet1/1: admin up / oper up; srv-a:eth0: admin up / oper up",
+          "evidence_ids": [
+            "EV-00097",
+            "EV-00098"
+          ]
+        },
+        {
+          "id": "traffic",
+          "label": "Endpoint reachability",
+          "rationale": "10/10 probes Server A \u2192 Server B.",
+          "passed": true,
+          "detail": "10/10 replies (0% loss) srv-a\u2192srv-b, 56 B",
+          "evidence_ids": [
+            "EV-00099"
+          ]
+        },
+        {
+          "id": "throughput",
+          "label": "Throughput vs baseline",
+          "rationale": "Identical bounded TCP test \u226590% of baseline.",
+          "passed": true,
+          "detail": "23.31 Gbit/s vs baseline 23.31 Gbit/s (100%, need \u226590%; same params: 10 s, P1, n=1 run each)",
+          "evidence_ids": [
+            "EV-00100"
+          ]
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "id": 71,
+      "kind": "investigation_opened",
+      "message": "INV-0012 opened (guided, SIMULATED) for scenario low-rx-power@1",
+      "at": "2026-11-13T07:52:55.607648+00:00",
+      "sim_time_ms": 0,
+      "data": {
+        "scenario": "low-rx-power@1",
+        "mode": "guided",
+        "source_mode": "SIMULATED"
+      }
+    },
+    {
+      "id": 72,
+      "kind": "baseline_captured",
+      "message": "Healthy baseline captured (3 observations)",
+      "at": "2026-11-13T07:52:55.728400+00:00",
+      "sim_time_ms": 22500,
+      "data": {
+        "evidence_ids": [
+          "EV-00086",
+          "EV-00087",
+          "EV-00088"
+        ]
+      }
+    },
+    {
+      "id": 73,
+      "kind": "fault_injected",
+      "message": "Scenario fault injected (location withheld until resolution)",
+      "at": "2026-11-13T07:52:57.696259+00:00",
+      "sim_time_ms": 52500,
+      "data": {
+        "hidden": true,
+        "changed_resources": [
+          "connector:pp-02:F01"
+        ]
+      }
+    },
+    {
+      "id": 74,
+      "kind": "alarm",
+      "message": "Simulated monitoring alarm: DOM Rx low-warning on asw-1 Ethernet1/1",
+      "at": "2026-11-13T07:52:57.699279+00:00",
+      "sim_time_ms": 112500,
+      "data": {
+        "detection_latency_sim_ms": 60000
+      }
+    },
+    {
+      "id": 75,
+      "kind": "diagnostic",
+      "message": "Optical telemetry \u2014 asw-1:Ethernet1/1 \u21c4 srv-a:eth0: WARNING",
+      "at": "2026-11-13T07:52:59.719627+00:00",
+      "sim_time_ms": 114500,
+      "data": {
+        "evidence_id": "EV-00090",
+        "action": "optical_telemetry"
+      }
+    },
+    {
+      "id": 76,
+      "kind": "diagnostic",
+      "message": "Documented cable path \u2014 srv-a:eth0: INFO",
+      "at": "2026-11-13T07:53:02.548451+00:00",
+      "sim_time_ms": 114500,
+      "data": {
+        "evidence_id": "EV-00091",
+        "action": "cable_trace"
+      }
+    },
+    {
+      "id": 77,
+      "kind": "diagnostic",
+      "message": "Connector inspection \u2014 asw-1:Ethernet1/1: OK",
+      "at": "2026-11-13T07:53:04.581820+00:00",
+      "sim_time_ms": 234500,
+      "data": {
+        "evidence_id": "EV-00092",
+        "action": "connector_inspection"
+      }
+    },
+    {
+      "id": 78,
+      "kind": "diagnostic",
+      "message": "Connector inspection \u2014 pp-02:F01: FAIL",
+      "at": "2026-11-13T07:53:04.603161+00:00",
+      "sim_time_ms": 354500,
+      "data": {
+        "evidence_id": "EV-00093",
+        "action": "connector_inspection"
+      }
+    },
+    {
+      "id": 79,
+      "kind": "diagnosis_recorded",
+      "message": "Diagnosis: Degraded optical path (low Rx power) \u2014 Excess loss on the srv-a \u2192 asw-1 fiber. Scope inspection failed at PP-02 F01 (CBL-F201 end); other inspected points passed.",
+      "at": "2026-11-13T07:53:06.599689+00:00",
+      "sim_time_ms": 354500,
+      "data": {
+        "category": "optical_path_degraded",
+        "evidence_ids": [
+          "EV-00090",
+          "EV-00091",
+          "EV-00092",
+          "EV-00093"
+        ],
+        "previous": null
+      }
+    },
+    {
+      "id": 80,
+      "kind": "repair_applied",
+      "message": "Inspect\u2013clean\u2013reinspect at pp-02:F01 (CBL-F201) (state_changed)",
+      "at": "2026-11-13T07:53:08.586374+00:00",
+      "sim_time_ms": 654500,
+      "data": {
+        "repair_id": "RPR-0005",
+        "evidence_id": "EV-00094"
+      }
+    },
+    {
+      "id": 81,
+      "kind": "verification_passed",
+      "message": "Verification VR-0005 passed (5/5 checks)",
+      "at": "2026-11-13T07:53:10.588986+00:00",
+      "sim_time_ms": 681000,
+      "data": {
+        "verification_id": "VR-0005"
+      }
+    },
+    {
+      "id": 82,
+      "kind": "resolved",
+      "message": "Investigation resolved \u2014 all resolution criteria met",
+      "at": "2026-11-13T07:53:10.601500+00:00",
+      "sim_time_ms": 681000,
+      "data": {}
+    }
+  ],
+  "metrics": {
+    "wall_clock": {
+      "note": "Real elapsed time of operator interaction (UTC wall clock).",
+      "investigation_started_at": "2026-11-13T07:52:55.607095+00:00",
+      "fault_injected_at": "2026-11-13T07:52:57.696226+00:00",
+      "first_diagnostic_at": "2026-11-13T07:52:59.708394+00:00",
+      "diagnosis_recorded_at": "2026-11-13T07:53:06.599680+00:00",
+      "repair_applied_at": "2026-11-13T07:53:08.586330+00:00",
+      "verification_completed_at": "2026-11-13T07:53:10.588946+00:00",
+      "resolved_at": "2026-11-13T07:53:10.601494+00:00",
+      "fault_to_first_action_s": 2.0,
+      "fault_to_diagnosis_s": 8.9,
+      "diagnosis_to_repair_s": 2.0,
+      "repair_to_verified_s": 2.0,
+      "fault_to_resolved_s": 12.9
+    },
+    "simulated_time": {
+      "note": "Simulated network time advanced by modeled action durations (probes at 1 s intervals, test durations, field procedures). Not real time.",
+      "applies": true,
+      "clock_ms": 681000,
+      "fault_onset_ms": 52500,
+      "simulated_detection_latency_ms": 60000,
+      "detection_mechanism": "Simulated DOM poll every 60 s"
+    },
+    "counts": {
+      "diagnostic_actions": 4,
+      "repairs": 1,
+      "failed_verifications": 0,
+      "reopened": 0
+    }
+  },
+  "limitations": [
+    "All device output in this report is SIMULATED, generated from a deterministic scenario model \u2014 not captured from real equipment.",
+    "Patch panels, trunk and optics are modeled; no physical fiber was tested. Optical loss figures are estimates from modeled DOM readings, not OTDR or certified results.",
+    "Throughput and RTT values come from simplified models and are not performance predictions.",
+    "Simulated time (probe intervals, field procedures) is distinct from the wall-clock time of operator interaction.",
+    "DOM readings have limited accuracy (often a few dB); compare trends and both ends rather than single absolute values.",
+    "Thresholds are per module. Where a module reports none, status is UNKNOWN \u2014 no universal thresholds are substituted.",
+    "Loss estimates pair Tx and Rx read in the same collection, same wavelength; they are not OTDR results or certified tests.",
+    "ICMP reachability shows only that echo requests/replies of this size were delivered; it is not application verification.",
+    "RTT values come from a simplified latency model; probe interval is simulated at 1 s (10 s simulated time).",
+    "Throughput is computed by a simplified model (link rate \u00d7 framing efficiency \u00d7 loss factor). It is not a prediction of real TCP behavior.",
+    "Test bounded to 10 s simulated time.",
+    "Simulated monitoring poll; detection latency is bounded by the 60 s simulated poll interval.",
+    "Source: documented cable registry (not a live device query).",
+    "Patch panels and trunk segments are modeled; in the Linux lab the real link is a veth pair.",
+    "Path tracing never infers missing links; gaps are reported as gaps.",
+    "Simulated inspection record \u2014 in a real environment this is a physical step using a video inspection probe.",
+    "Safety: never look into a fiber connector or port; treat all fibers as potentially live.",
+    "Simulated change to scenario state.",
+    "Observes this end only; the far end may report a different view."
+  ],
+  "lessons_learned": "",
+  "answer_key": {
+    "diagnosis_category": "optical_path_degraded",
+    "diagnosis_label": "Degraded optical path (low Rx power)",
+    "fault_mutation": "Excess loss is introduced at one mated connection point on one fiber of the duplex path (modeled contamination). The location is hidden.",
+    "corrective_action": "Inspect each mated point with a fiber scope; clean (or replace the cord) only where inspection fails; re-inspect; re-read optics.",
+    "diagnosis_matched": true
+  },
+  "resolution_criteria": [
+    {
+      "id": "baseline",
+      "label": "Healthy baseline captured",
+      "met": true
+    },
+    {
+      "id": "fault",
+      "label": "Fault introduced and observed",
+      "met": true
+    },
+    {
+      "id": "diagnosis",
+      "label": "Diagnosis recorded with cited evidence",
+      "met": true
+    },
+    {
+      "id": "repair",
+      "label": "Corrective action applied after diagnosis",
+      "met": true
+    },
+    {
+      "id": "verification",
+      "label": "Scenario-specific verification passed after the latest repair",
+      "met": true
+    }
+  ],
+  "provenance": {
+    "evidence_count": 15,
+    "source_modes": [
+      "SIMULATED"
+    ],
+    "integrity": "Each evidence item carries a SHA-256 of its content at collection time; evidence rows are append-only."
+  }
+}

@@ -1,0 +1,1754 @@
+{
+  "report_version": "fiberscope.report.v1",
+  "generated_at": "2026-11-13T08:03:28.339674+00:00",
+  "title": "Wrong VLAN on an access port",
+  "investigation": {
+    "id": "INV-0011",
+    "status": "resolved",
+    "mode": "guided",
+    "created_at": "2026-11-13T07:51:54.109177+00:00",
+    "resolved_at": "2026-11-13T07:52:09.990758+00:00",
+    "abandoned_at": null,
+    "failed_verifications": 0
+  },
+  "scenario": {
+    "key": "wrong-vlan",
+    "version": 1,
+    "title": "Wrong VLAN on an access port",
+    "short": "Link is up, but the server is unreachable.",
+    "source_mode": "SIMULATED",
+    "execution_id": "EXE-0011"
+  },
+  "network_path": {
+    "source": "no cable trace was collected during this investigation",
+    "path": null
+  },
+  "initial_symptom": "Application team: Server A cannot reach Server B (192.0.2.12). On-site check reports Server B's NIC link light is on.",
+  "scope": "",
+  "baseline": [
+    {
+      "id": "EV-00069",
+      "title": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d710)",
+      "collector": "reachability",
+      "phase": "baseline",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:51:54.251952+00:00",
+      "sim_time_ms": 10000,
+      "source_mode": "SIMULATED",
+      "interpretation": "All 10 probes from srv-a to 192.0.2.12 were answered (56-byte payload). This confirms IP reachability for packets of this size in both directions at the time of the test. It does not prove that larger packets, sustained throughput, or other flows work.",
+      "command": "ping -c 10 -s 56 192.0.2.12"
+    },
+    {
+      "id": "EV-00070",
+      "title": "Reachability srv-b \u2192 srv-a (IPv4, 56 B, \u00d710)",
+      "collector": "reachability",
+      "phase": "baseline",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:51:54.263153+00:00",
+      "sim_time_ms": 20000,
+      "source_mode": "SIMULATED",
+      "interpretation": "All 10 probes from srv-b to 192.0.2.11 were answered (56-byte payload). This confirms IP reachability for packets of this size in both directions at the time of the test. It does not prove that larger packets, sustained throughput, or other flows work.",
+      "command": "ping -c 10 -s 56 192.0.2.11"
+    },
+    {
+      "id": "EV-00071",
+      "title": "Throughput srv-a \u2192 srv-b (10s, P1)",
+      "collector": "throughput",
+      "phase": "baseline",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:51:54.268781+00:00",
+      "sim_time_ms": 30500,
+      "source_mode": "SIMULATED",
+      "interpretation": "Average 23.28 Gbit/s over 10 s with 0 retransmissions on a 25 Gbit/s path (MSS 8960).",
+      "command": "iperf3 -c 192.0.2.12 -t 10 -P 1 --connect-timeout 3000"
+    },
+    {
+      "id": "EV-00072",
+      "title": "VLAN membership \u2014 asw-2",
+      "collector": "vlan_membership",
+      "phase": "baseline",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:51:54.274139+00:00",
+      "sim_time_ms": 31500,
+      "source_mode": "SIMULATED",
+      "interpretation": "All data ports on asw-2 match the documented VLAN intent.",
+      "command": "show vlan brief; show interface switchport"
+    },
+    {
+      "id": "EV-00073",
+      "title": "Interface state \u2014 asw-2:Ethernet1/1",
+      "collector": "interface_state",
+      "phase": "baseline",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:51:54.280786+00:00",
+      "sim_time_ms": 32500,
+      "source_mode": "SIMULATED",
+      "interpretation": "asw-2:Ethernet1/1 is administratively UP and operationally UP \u2014 the physical link is established at this port. A link that is up does not prove Layer 2/3 forwarding is correct.",
+      "command": "show interface Ethernet1/1"
+    }
+  ],
+  "diagnostic_actions": [
+    {
+      "id": "EV-00074",
+      "title": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d710)",
+      "collector": "reachability",
+      "phase": "investigation",
+      "verdict": "fail",
+      "collected_at": "2026-11-13T07:51:58.203960+00:00",
+      "sim_time_ms": 72500,
+      "source_mode": "SIMULATED",
+      "interpretation": "No replies. The kernel reported 'Destination Host Unreachable', meaning srv-a could not resolve the link-layer address of 192.0.2.12 (ARP/ND failed). 192.0.2.12 is on-link, so this points at Layer 1/Layer 2 between the hosts \u2014 but it does not identify which element. A server that does not respond is a symptom, not proof of a broken cable.",
+      "command": "ping -c 10 -s 56 192.0.2.12"
+    },
+    {
+      "id": "EV-00075",
+      "title": "Interface state \u2014 asw-2:Ethernet1/1",
+      "collector": "interface_state",
+      "phase": "investigation",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:52:00.171778+00:00",
+      "sim_time_ms": 73500,
+      "source_mode": "SIMULATED",
+      "interpretation": "asw-2:Ethernet1/1 is administratively UP and operationally UP \u2014 the physical link is established at this port. A link that is up does not prove Layer 2/3 forwarding is correct.",
+      "command": "show interface Ethernet1/1"
+    },
+    {
+      "id": "EV-00076",
+      "title": "Interface state \u2014 srv-b:eth0",
+      "collector": "interface_state",
+      "phase": "investigation",
+      "verdict": "ok",
+      "collected_at": "2026-11-13T07:52:00.193540+00:00",
+      "sim_time_ms": 74500,
+      "source_mode": "SIMULATED",
+      "interpretation": "srv-b:eth0 is administratively UP and operationally UP \u2014 the physical link is established at this port. A link that is up does not prove Layer 2/3 forwarding is correct.",
+      "command": "ip -d link show dev eth0; ethtool eth0 | grep -E 'Speed|Link detected'"
+    },
+    {
+      "id": "EV-00077",
+      "title": "VLAN membership \u2014 asw-2",
+      "collector": "vlan_membership",
+      "phase": "investigation",
+      "verdict": "fail",
+      "collected_at": "2026-11-13T07:52:02.127435+00:00",
+      "sim_time_ms": 75500,
+      "source_mode": "SIMULATED",
+      "interpretation": "Running VLAN configuration differs from documented intent: Ethernet1/1 is running access VLAN 30 but the documented intent is VLAN 20 (cabled to srv-b:eth0). A host on the wrong access VLAN keeps a healthy physical link but is in a different broadcast domain, so ARP to peers in the intended VLAN fails.",
+      "command": "show vlan brief; show interface switchport"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-00069",
+      "seq": 69,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00065",
+      "phase": "baseline",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "reachability",
+      "title": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d710)",
+      "target": {
+        "src": "srv-a",
+        "dst": "srv-b"
+      },
+      "params": {
+        "count": 10,
+        "payload_bytes": 56,
+        "dont_fragment": false,
+        "ip_version": 4
+      },
+      "command": "ping -c 10 -s 56 192.0.2.12",
+      "purpose": "Test end-to-end IP reachability with ICMP echo probes.",
+      "raw_output": "PING 192.0.2.12 (192.0.2.12) 56(84) bytes of data.\n64 bytes from 192.0.2.12: icmp_seq=1 ttl=64 time=0.179 ms\n64 bytes from 192.0.2.12: icmp_seq=2 ttl=64 time=0.151 ms\n64 bytes from 192.0.2.12: icmp_seq=3 ttl=64 time=0.161 ms\n64 bytes from 192.0.2.12: icmp_seq=4 ttl=64 time=0.159 ms\n64 bytes from 192.0.2.12: icmp_seq=5 ttl=64 time=0.167 ms\n64 bytes from 192.0.2.12: icmp_seq=6 ttl=64 time=0.157 ms\n64 bytes from 192.0.2.12: icmp_seq=7 ttl=64 time=0.185 ms\n64 bytes from 192.0.2.12: icmp_seq=8 ttl=64 time=0.158 ms\n64 bytes from 192.0.2.12: icmp_seq=9 ttl=64 time=0.179 ms\n64 bytes from 192.0.2.12: icmp_seq=10 ttl=64 time=0.167 ms\n\n--- 192.0.2.12 ping statistics ---\n10 packets transmitted, 10 received, 0% packet loss, time 9012ms\nrtt min/avg/max/mdev = 0.151/0.166/0.185/0.011 ms",
+      "payload": {
+        "src": "srv-a",
+        "dst": "srv-b",
+        "src_ip": "192.0.2.11",
+        "dst_ip": "192.0.2.12",
+        "ip_version": 4,
+        "count": 10,
+        "payload_bytes": 56,
+        "packet_bytes": 84,
+        "dont_fragment": false,
+        "transmitted": 10,
+        "received": 10,
+        "errors": 0,
+        "loss_pct": 0.0,
+        "rtt_ms": {
+          "min": 0.151,
+          "avg": 0.166,
+          "max": 0.185,
+          "mdev": 0.011
+        },
+        "neighbor_resolved": true,
+        "failure_mode": "none"
+      },
+      "interpretation": "All 10 probes from srv-a to 192.0.2.12 were answered (56-byte payload). This confirms IP reachability for packets of this size in both directions at the time of the test. It does not prove that larger packets, sustained throughput, or other flows work.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "ICMP reachability shows only that echo requests/replies of this size were delivered; it is not application verification.",
+        "RTT values come from a simplified latency model; probe interval is simulated at 1 s (10 s simulated time)."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-a->srv-b",
+          "status": "up",
+          "label": "srv-a \u2192 srv-b"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:51:54.251952+00:00",
+      "sim_time_ms": 10000,
+      "content_sha256": "575bee63c363cd0f970428f0227f95e61329e1af803eef4e03b2e3a16bdacd96",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00070",
+      "seq": 70,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00066",
+      "phase": "baseline",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-b",
+      "collector": "reachability",
+      "title": "Reachability srv-b \u2192 srv-a (IPv4, 56 B, \u00d710)",
+      "target": {
+        "src": "srv-b",
+        "dst": "srv-a"
+      },
+      "params": {
+        "count": 10,
+        "payload_bytes": 56,
+        "dont_fragment": false,
+        "ip_version": 4
+      },
+      "command": "ping -c 10 -s 56 192.0.2.11",
+      "purpose": "Test end-to-end IP reachability with ICMP echo probes.",
+      "raw_output": "PING 192.0.2.11 (192.0.2.11) 56(84) bytes of data.\n64 bytes from 192.0.2.11: icmp_seq=1 ttl=64 time=0.159 ms\n64 bytes from 192.0.2.11: icmp_seq=2 ttl=64 time=0.159 ms\n64 bytes from 192.0.2.11: icmp_seq=3 ttl=64 time=0.191 ms\n64 bytes from 192.0.2.11: icmp_seq=4 ttl=64 time=0.191 ms\n64 bytes from 192.0.2.11: icmp_seq=5 ttl=64 time=0.160 ms\n64 bytes from 192.0.2.11: icmp_seq=6 ttl=64 time=0.163 ms\n64 bytes from 192.0.2.11: icmp_seq=7 ttl=64 time=0.178 ms\n64 bytes from 192.0.2.11: icmp_seq=8 ttl=64 time=0.167 ms\n64 bytes from 192.0.2.11: icmp_seq=9 ttl=64 time=0.175 ms\n64 bytes from 192.0.2.11: icmp_seq=10 ttl=64 time=0.159 ms\n\n--- 192.0.2.11 ping statistics ---\n10 packets transmitted, 10 received, 0% packet loss, time 9012ms\nrtt min/avg/max/mdev = 0.159/0.170/0.191/0.012 ms",
+      "payload": {
+        "src": "srv-b",
+        "dst": "srv-a",
+        "src_ip": "192.0.2.12",
+        "dst_ip": "192.0.2.11",
+        "ip_version": 4,
+        "count": 10,
+        "payload_bytes": 56,
+        "packet_bytes": 84,
+        "dont_fragment": false,
+        "transmitted": 10,
+        "received": 10,
+        "errors": 0,
+        "loss_pct": 0.0,
+        "rtt_ms": {
+          "min": 0.159,
+          "avg": 0.17,
+          "max": 0.191,
+          "mdev": 0.012
+        },
+        "neighbor_resolved": true,
+        "failure_mode": "none"
+      },
+      "interpretation": "All 10 probes from srv-b to 192.0.2.11 were answered (56-byte payload). This confirms IP reachability for packets of this size in both directions at the time of the test. It does not prove that larger packets, sustained throughput, or other flows work.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "ICMP reachability shows only that echo requests/replies of this size were delivered; it is not application verification.",
+        "RTT values come from a simplified latency model; probe interval is simulated at 1 s (10 s simulated time)."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-b->srv-a",
+          "status": "up",
+          "label": "srv-b \u2192 srv-a"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:51:54.263153+00:00",
+      "sim_time_ms": 20000,
+      "content_sha256": "a9aa0beacdbbb9d545e9ad33e52670f4862b7e8156c64f721f7cc010d3a9c13d",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00071",
+      "seq": 71,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00067",
+      "phase": "baseline",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "throughput",
+      "title": "Throughput srv-a \u2192 srv-b (10s, P1)",
+      "target": {
+        "src": "srv-a",
+        "dst": "srv-b"
+      },
+      "params": {
+        "duration_s": 10,
+        "parallel": 1
+      },
+      "command": "iperf3 -c 192.0.2.12 -t 10 -P 1 --connect-timeout 3000",
+      "purpose": "Bounded TCP throughput test.",
+      "raw_output": "Connecting to host 192.0.2.12, port 5201\n[  5] local 192.0.2.11 port 43122 connected to 192.0.2.12 port 5201\n[ ID] Interval           Transfer     Bitrate         Retr\n[  5]   0.00-1.00  sec  2.90 GBytes  23.18 Gbits/sec\n[  5]   1.00-2.00  sec  2.90 GBytes  23.19 Gbits/sec\n[  5]   2.00-3.00  sec  2.92 GBytes  23.37 Gbits/sec\n[  5]   3.00-4.00  sec  2.92 GBytes  23.36 Gbits/sec\n[  5]   4.00-5.00  sec  2.90 GBytes  23.20 Gbits/sec\n[  5]   5.00-6.00  sec  2.91 GBytes  23.26 Gbits/sec\n[  5]   6.00-7.00  sec  2.91 GBytes  23.31 Gbits/sec\n[  5]   7.00-8.00  sec  2.93 GBytes  23.43 Gbits/sec\n[  5]   8.00-9.00  sec  2.91 GBytes  23.30 Gbits/sec\n[  5]   9.00-10.00  sec  2.90 GBytes  23.17 Gbits/sec\n- - - - - - - - - - - - - - - - - - - - - - - - -\n[  5]   0.00-10.00  sec  29.10 GBytes  23.28 Gbits/sec     0             sender\n[  5]   0.00-10.00  sec  29.10 GBytes  23.28 Gbits/sec                  receiver",
+      "payload": {
+        "src": "srv-a",
+        "dst": "srv-b",
+        "duration_s": 10,
+        "parallel": 1,
+        "protocol": "TCP",
+        "connected": true,
+        "sender_gbps": 23.277,
+        "receiver_gbps": 23.277,
+        "retransmits": 0,
+        "intervals": [
+          {
+            "start_s": 0,
+            "end_s": 1,
+            "gbps": 23.183
+          },
+          {
+            "start_s": 1,
+            "end_s": 2,
+            "gbps": 23.189
+          },
+          {
+            "start_s": 2,
+            "end_s": 3,
+            "gbps": 23.37
+          },
+          {
+            "start_s": 3,
+            "end_s": 4,
+            "gbps": 23.365
+          },
+          {
+            "start_s": 4,
+            "end_s": 5,
+            "gbps": 23.201
+          },
+          {
+            "start_s": 5,
+            "end_s": 6,
+            "gbps": 23.258
+          },
+          {
+            "start_s": 6,
+            "end_s": 7,
+            "gbps": 23.309
+          },
+          {
+            "start_s": 7,
+            "end_s": 8,
+            "gbps": 23.428
+          },
+          {
+            "start_s": 8,
+            "end_s": 9,
+            "gbps": 23.3
+          },
+          {
+            "start_s": 9,
+            "end_s": 10,
+            "gbps": 23.171
+          }
+        ],
+        "mss_bytes": 8960,
+        "link_speed_gbps": 25.0,
+        "stalled": false
+      },
+      "interpretation": "Average 23.28 Gbit/s over 10 s with 0 retransmissions on a 25 Gbit/s path (MSS 8960).",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Throughput is computed by a simplified model (link rate \u00d7 framing efficiency \u00d7 loss factor). It is not a prediction of real TCP behavior.",
+        "Test bounded to 10 s simulated time."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-a->srv-b",
+          "status": "up",
+          "label": "23.28 Gbit/s"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:51:54.268781+00:00",
+      "sim_time_ms": 30500,
+      "content_sha256": "8d1117c0ebc03c4f2e6af5e20fb93853a299e2f8f0b08ab40d688b28db600237",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00072",
+      "seq": 72,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00068",
+      "phase": "baseline",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-2",
+      "collector": "vlan_membership",
+      "title": "VLAN membership \u2014 asw-2",
+      "target": {
+        "device": "asw-2"
+      },
+      "params": {},
+      "command": "show vlan brief; show interface switchport",
+      "purpose": "Compare running VLAN membership to documented intent.",
+      "raw_output": "VLAN Name         Status    Ports\n---- ------------ --------- -------------------------------\n20   APP-DATA     active    Eth1/1, Eth1/49(T)\n30   STORAGE      active    Eth1/49(T), Eth1/2\n\nPort      Mode    Access  Trunk-allowed\nEth1/1    access  20      -\nEth1/49   trunk   -       20,30\nEth1/2    access  30      -",
+      "payload": {
+        "device": "asw-2",
+        "ports": [
+          {
+            "interface": "asw-2:Ethernet1/1",
+            "port": "Ethernet1/1",
+            "mode": "access",
+            "running_vlan": 20,
+            "running_allowed": null,
+            "intended_vlan": 20,
+            "intended_allowed": null,
+            "cable_peer": "srv-b:eth0",
+            "matches_intent": true
+          },
+          {
+            "interface": "asw-2:Ethernet1/49",
+            "port": "Ethernet1/49",
+            "mode": "trunk",
+            "running_vlan": null,
+            "running_allowed": [
+              20,
+              30
+            ],
+            "intended_vlan": null,
+            "intended_allowed": [
+              20,
+              30
+            ],
+            "cable_peer": "asw-1:Ethernet1/49",
+            "matches_intent": true
+          },
+          {
+            "interface": "asw-2:Ethernet1/2",
+            "port": "Ethernet1/2",
+            "mode": "access",
+            "running_vlan": 30,
+            "running_allowed": null,
+            "intended_vlan": 30,
+            "intended_allowed": null,
+            "cable_peer": null,
+            "matches_intent": true
+          }
+        ],
+        "mismatches": []
+      },
+      "interpretation": "All data ports on asw-2 match the documented VLAN intent.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Intent comes from the documented inventory; if the documentation is wrong, a 'mismatch' may be the documentation's error."
+      ],
+      "observations": [
+        {
+          "kind": "interface_vlan",
+          "id": "asw-2:Ethernet1/1",
+          "status": "ok",
+          "label": "VLAN 20"
+        },
+        {
+          "kind": "interface_vlan",
+          "id": "asw-2:Ethernet1/49",
+          "status": "ok",
+          "label": "VLAN [20, 30]"
+        },
+        {
+          "kind": "interface_vlan",
+          "id": "asw-2:Ethernet1/2",
+          "status": "ok",
+          "label": "VLAN 30"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:51:54.274139+00:00",
+      "sim_time_ms": 31500,
+      "content_sha256": "a6c7fea687a2a3e18260e148fd90cf90cc6cec9aa433dd3685adf8195cf81979",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00073",
+      "seq": 73,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00069",
+      "phase": "baseline",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-2",
+      "collector": "interface_state",
+      "title": "Interface state \u2014 asw-2:Ethernet1/1",
+      "target": {
+        "interface": "asw-2:Ethernet1/1"
+      },
+      "params": {},
+      "command": "show interface Ethernet1/1",
+      "purpose": "Read administrative and operational state separately.",
+      "raw_output": "Ethernet1/1 is up\n  admin state is up\n  Description: srv-b eth0 via PP-02 F02\n  Hardware: 25000 Mbps fiber, address: 02:00:5e:22:01:01\n  MTU 9216 bytes\n  Port mode is access, access VLAN 20\n  Link state: Link up\n  Last link flapped: never",
+      "payload": {
+        "interface": "asw-2:Ethernet1/1",
+        "device": "asw-2",
+        "admin_state": "up",
+        "oper_state": "up",
+        "reason": "Link up",
+        "mtu": 9216,
+        "intended_mtu": 9216,
+        "mode": "access",
+        "running_vlan": 20,
+        "running_allowed_vlans": null,
+        "intended_vlan": 20,
+        "speed_gbps": 25.0,
+        "carrier": true
+      },
+      "interpretation": "asw-2:Ethernet1/1 is administratively UP and operationally UP \u2014 the physical link is established at this port. A link that is up does not prove Layer 2/3 forwarding is correct.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Observes this end only; the far end may report a different view."
+      ],
+      "observations": [
+        {
+          "kind": "interface",
+          "id": "asw-2:Ethernet1/1",
+          "status": "up",
+          "label": "admin up / oper up",
+          "mtu": 9216
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:51:54.280786+00:00",
+      "sim_time_ms": 32500,
+      "content_sha256": "a58001fc234c4bb57b997a4ace7a95302d85142078d157829ac83ba9a00fc4b2",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00074",
+      "seq": 74,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00070",
+      "phase": "investigation",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "reachability",
+      "title": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d710)",
+      "target": {
+        "src": "srv-a",
+        "dst": "srv-b"
+      },
+      "params": {
+        "count": 10,
+        "payload_bytes": 56,
+        "dont_fragment": false,
+        "ip_version": 4
+      },
+      "command": "ping -c 10 -s 56 192.0.2.12",
+      "purpose": "Test end-to-end IP reachability with ICMP echo probes.",
+      "raw_output": "PING 192.0.2.12 (192.0.2.12) 56(84) bytes of data.\nFrom 192.0.2.11 icmp_seq=1 Destination Host Unreachable\nFrom 192.0.2.11 icmp_seq=2 Destination Host Unreachable\nFrom 192.0.2.11 icmp_seq=3 Destination Host Unreachable\nFrom 192.0.2.11 icmp_seq=4 Destination Host Unreachable\nFrom 192.0.2.11 icmp_seq=5 Destination Host Unreachable\nFrom 192.0.2.11 icmp_seq=6 Destination Host Unreachable\nFrom 192.0.2.11 icmp_seq=7 Destination Host Unreachable\nFrom 192.0.2.11 icmp_seq=8 Destination Host Unreachable\nFrom 192.0.2.11 icmp_seq=9 Destination Host Unreachable\nFrom 192.0.2.11 icmp_seq=10 Destination Host Unreachable\n\n--- 192.0.2.12 ping statistics ---\n10 packets transmitted, 0 received, +10 errors, 100% packet loss, time 9012ms",
+      "payload": {
+        "src": "srv-a",
+        "dst": "srv-b",
+        "src_ip": "192.0.2.11",
+        "dst_ip": "192.0.2.12",
+        "ip_version": 4,
+        "count": 10,
+        "payload_bytes": 56,
+        "packet_bytes": 84,
+        "dont_fragment": false,
+        "transmitted": 10,
+        "received": 0,
+        "errors": 10,
+        "loss_pct": 100.0,
+        "rtt_ms": null,
+        "neighbor_resolved": false,
+        "failure_mode": "neighbor_unresolved"
+      },
+      "interpretation": "No replies. The kernel reported 'Destination Host Unreachable', meaning srv-a could not resolve the link-layer address of 192.0.2.12 (ARP/ND failed). 192.0.2.12 is on-link, so this points at Layer 1/Layer 2 between the hosts \u2014 but it does not identify which element. A server that does not respond is a symptom, not proof of a broken cable.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "ICMP reachability shows only that echo requests/replies of this size were delivered; it is not application verification.",
+        "RTT values come from a simplified latency model; probe interval is simulated at 1 s (10 s simulated time)."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-a->srv-b",
+          "status": "down",
+          "label": "srv-a \u2192 srv-b"
+        }
+      ],
+      "verdict": "fail",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:51:58.203960+00:00",
+      "sim_time_ms": 72500,
+      "content_sha256": "ffbec2a8857dcef0f375861c28832dc7d9f5346037f5840bdc7c9767bc77a6b7",
+      "next_steps": [
+        "Inspect interface state at both ends (admin vs operational)",
+        "Inspect the neighbor table on the source",
+        "Inspect VLAN membership on the access switches"
+      ]
+    },
+    {
+      "id": "EV-00075",
+      "seq": 75,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00071",
+      "phase": "investigation",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-2",
+      "collector": "interface_state",
+      "title": "Interface state \u2014 asw-2:Ethernet1/1",
+      "target": {
+        "interface": "asw-2:Ethernet1/1"
+      },
+      "params": {},
+      "command": "show interface Ethernet1/1",
+      "purpose": "Read administrative and operational state separately.",
+      "raw_output": "Ethernet1/1 is up\n  admin state is up\n  Description: srv-b eth0 via PP-02 F02\n  Hardware: 25000 Mbps fiber, address: 02:00:5e:22:01:01\n  MTU 9216 bytes\n  Port mode is access, access VLAN 30\n  Link state: Link up\n  Last link flapped: never",
+      "payload": {
+        "interface": "asw-2:Ethernet1/1",
+        "device": "asw-2",
+        "admin_state": "up",
+        "oper_state": "up",
+        "reason": "Link up",
+        "mtu": 9216,
+        "intended_mtu": 9216,
+        "mode": "access",
+        "running_vlan": 30,
+        "running_allowed_vlans": null,
+        "intended_vlan": 20,
+        "speed_gbps": 25.0,
+        "carrier": true
+      },
+      "interpretation": "asw-2:Ethernet1/1 is administratively UP and operationally UP \u2014 the physical link is established at this port. A link that is up does not prove Layer 2/3 forwarding is correct.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Observes this end only; the far end may report a different view."
+      ],
+      "observations": [
+        {
+          "kind": "interface",
+          "id": "asw-2:Ethernet1/1",
+          "status": "up",
+          "label": "admin up / oper up",
+          "mtu": 9216
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:00.171778+00:00",
+      "sim_time_ms": 73500,
+      "content_sha256": "ac8e65b4fe7e04f3a4eb9a17b769d9ee0c48a110eaa42bb09be8661b3b5202d2",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00076",
+      "seq": 76,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00072",
+      "phase": "investigation",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-b",
+      "collector": "interface_state",
+      "title": "Interface state \u2014 srv-b:eth0",
+      "target": {
+        "interface": "srv-b:eth0"
+      },
+      "params": {},
+      "command": "ip -d link show dev eth0; ethtool eth0 | grep -E 'Speed|Link detected'",
+      "purpose": "Read administrative and operational state separately.",
+      "raw_output": "2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9000 qdisc mq state UP mode DEFAULT group default qlen 1000\n    link/ether 02:00:5e:10:00:12 brd ff:ff:ff:ff:ff:ff\n\tSpeed: 25000Mb/s\n\tLink detected: yes",
+      "payload": {
+        "interface": "srv-b:eth0",
+        "device": "srv-b",
+        "admin_state": "up",
+        "oper_state": "up",
+        "reason": "Link up",
+        "mtu": 9000,
+        "intended_mtu": 9000,
+        "mode": null,
+        "running_vlan": null,
+        "running_allowed_vlans": null,
+        "intended_vlan": null,
+        "speed_gbps": 25.0,
+        "carrier": true
+      },
+      "interpretation": "srv-b:eth0 is administratively UP and operationally UP \u2014 the physical link is established at this port. A link that is up does not prove Layer 2/3 forwarding is correct.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Observes this end only; the far end may report a different view."
+      ],
+      "observations": [
+        {
+          "kind": "interface",
+          "id": "srv-b:eth0",
+          "status": "up",
+          "label": "admin up / oper up",
+          "mtu": 9000
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:00.193540+00:00",
+      "sim_time_ms": 74500,
+      "content_sha256": "82393aecc1b52f33bc0dc45d8b099a00d2a18d05d2c7606140faaa99abfbf150",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00077",
+      "seq": 77,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00073",
+      "phase": "investigation",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-2",
+      "collector": "vlan_membership",
+      "title": "VLAN membership \u2014 asw-2",
+      "target": {
+        "device": "asw-2"
+      },
+      "params": {},
+      "command": "show vlan brief; show interface switchport",
+      "purpose": "Compare running VLAN membership to documented intent.",
+      "raw_output": "VLAN Name         Status    Ports\n---- ------------ --------- -------------------------------\n20   APP-DATA     active    Eth1/49(T)\n30   STORAGE      active    Eth1/1, Eth1/49(T), Eth1/2\n\nPort      Mode    Access  Trunk-allowed\nEth1/1    access  30      -\nEth1/49   trunk   -       20,30\nEth1/2    access  30      -",
+      "payload": {
+        "device": "asw-2",
+        "ports": [
+          {
+            "interface": "asw-2:Ethernet1/1",
+            "port": "Ethernet1/1",
+            "mode": "access",
+            "running_vlan": 30,
+            "running_allowed": null,
+            "intended_vlan": 20,
+            "intended_allowed": null,
+            "cable_peer": "srv-b:eth0",
+            "matches_intent": false
+          },
+          {
+            "interface": "asw-2:Ethernet1/49",
+            "port": "Ethernet1/49",
+            "mode": "trunk",
+            "running_vlan": null,
+            "running_allowed": [
+              20,
+              30
+            ],
+            "intended_vlan": null,
+            "intended_allowed": [
+              20,
+              30
+            ],
+            "cable_peer": "asw-1:Ethernet1/49",
+            "matches_intent": true
+          },
+          {
+            "interface": "asw-2:Ethernet1/2",
+            "port": "Ethernet1/2",
+            "mode": "access",
+            "running_vlan": 30,
+            "running_allowed": null,
+            "intended_vlan": 30,
+            "intended_allowed": null,
+            "cable_peer": null,
+            "matches_intent": true
+          }
+        ],
+        "mismatches": [
+          {
+            "interface": "asw-2:Ethernet1/1",
+            "port": "Ethernet1/1",
+            "mode": "access",
+            "running_vlan": 30,
+            "running_allowed": null,
+            "intended_vlan": 20,
+            "intended_allowed": null,
+            "cable_peer": "srv-b:eth0",
+            "matches_intent": false
+          }
+        ]
+      },
+      "interpretation": "Running VLAN configuration differs from documented intent: Ethernet1/1 is running access VLAN 30 but the documented intent is VLAN 20 (cabled to srv-b:eth0). A host on the wrong access VLAN keeps a healthy physical link but is in a different broadcast domain, so ARP to peers in the intended VLAN fails.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Intent comes from the documented inventory; if the documentation is wrong, a 'mismatch' may be the documentation's error."
+      ],
+      "observations": [
+        {
+          "kind": "interface",
+          "id": "asw-2:Ethernet1/1",
+          "status": "mismatch",
+          "label": "VLAN 30 \u2260 intended 20"
+        },
+        {
+          "kind": "interface_vlan",
+          "id": "asw-2:Ethernet1/49",
+          "status": "ok",
+          "label": "VLAN [20, 30]"
+        },
+        {
+          "kind": "interface_vlan",
+          "id": "asw-2:Ethernet1/2",
+          "status": "ok",
+          "label": "VLAN 30"
+        }
+      ],
+      "verdict": "fail",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:02.127435+00:00",
+      "sim_time_ms": 75500,
+      "content_sha256": "d6ef5d8d3d404d7bb8b69ae2d901b43071ea71ccd0c05aaddb8b9b677d0a4ad4",
+      "next_steps": [
+        "Record the diagnosis with this evidence",
+        "Restore the intended access VLAN on only the mismatched port",
+        "Verify: VLAN config, neighbor resolution, bidirectional reachability, throughput"
+      ]
+    },
+    {
+      "id": "EV-00078",
+      "seq": 78,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": null,
+      "phase": "repair",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:repair",
+      "collector": "repair:set_access_vlan",
+      "title": "Corrective action \u2014 Set access VLAN on asw-2:Ethernet1/1: 30 \u2192 20",
+      "target": {
+        "interface": "asw-2:Ethernet1/1"
+      },
+      "params": {
+        "vlan": 20
+      },
+      "command": "configure terminal\n interface Ethernet1/1\n  switchport access vlan 20\n end",
+      "purpose": "Change the access VLAN on one switch port.",
+      "raw_output": "asw-2(config-if)# switchport access vlan 20\n% Configuration applied (simulated)",
+      "payload": {
+        "action": "set_access_vlan",
+        "changed_resources": [
+          "asw-2:Ethernet1/1"
+        ],
+        "outcome": "state_changed",
+        "notes": ""
+      },
+      "interpretation": "Outcome: state_changed. A repair is not a resolution \u2014 run verification.",
+      "limitations": [
+        "Simulated change to scenario state."
+      ],
+      "observations": [],
+      "verdict": "info",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:06.047531+00:00",
+      "sim_time_ms": 77500,
+      "content_sha256": "30fc23e9b6a6fc84a314877344101d185803756a4e10343aef5348d3a9a9fc36",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00079",
+      "seq": 79,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00074",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-1",
+      "collector": "vlan_membership",
+      "title": "VLAN membership \u2014 asw-1",
+      "target": {
+        "device": "asw-1"
+      },
+      "params": {},
+      "command": "show vlan brief; show interface switchport",
+      "purpose": "Compare running VLAN membership to documented intent.",
+      "raw_output": "VLAN Name         Status    Ports\n---- ------------ --------- -------------------------------\n20   APP-DATA     active    Eth1/1, Eth1/49(T), Eth1/50(T)\n30   STORAGE      active    Eth1/49(T)\n\nPort      Mode    Access  Trunk-allowed\nEth1/1    access  20      -\nEth1/49   trunk   -       20,30\nEth1/50   trunk   -       20",
+      "payload": {
+        "device": "asw-1",
+        "ports": [
+          {
+            "interface": "asw-1:Ethernet1/1",
+            "port": "Ethernet1/1",
+            "mode": "access",
+            "running_vlan": 20,
+            "running_allowed": null,
+            "intended_vlan": 20,
+            "intended_allowed": null,
+            "cable_peer": "srv-a:eth0",
+            "matches_intent": true
+          },
+          {
+            "interface": "asw-1:Ethernet1/49",
+            "port": "Ethernet1/49",
+            "mode": "trunk",
+            "running_vlan": null,
+            "running_allowed": [
+              20,
+              30
+            ],
+            "intended_vlan": null,
+            "intended_allowed": [
+              20,
+              30
+            ],
+            "cable_peer": "asw-2:Ethernet1/49",
+            "matches_intent": true
+          },
+          {
+            "interface": "asw-1:Ethernet1/50",
+            "port": "Ethernet1/50",
+            "mode": "trunk",
+            "running_vlan": null,
+            "running_allowed": [
+              20
+            ],
+            "intended_vlan": null,
+            "intended_allowed": [
+              20
+            ],
+            "cable_peer": "gw-1:xe-0/0/0",
+            "matches_intent": true
+          }
+        ],
+        "mismatches": []
+      },
+      "interpretation": "All data ports on asw-1 match the documented VLAN intent.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Intent comes from the documented inventory; if the documentation is wrong, a 'mismatch' may be the documentation's error."
+      ],
+      "observations": [
+        {
+          "kind": "interface_vlan",
+          "id": "asw-1:Ethernet1/1",
+          "status": "ok",
+          "label": "VLAN 20"
+        },
+        {
+          "kind": "interface_vlan",
+          "id": "asw-1:Ethernet1/49",
+          "status": "ok",
+          "label": "VLAN [20, 30]"
+        },
+        {
+          "kind": "interface_vlan",
+          "id": "asw-1:Ethernet1/50",
+          "status": "ok",
+          "label": "VLAN [20]"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:08.013774+00:00",
+      "sim_time_ms": 78500,
+      "content_sha256": "8e1f6f8da2f0a413020954c098d74bb7c9e505761e38e912956fb4b660c27de5",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00080",
+      "seq": 80,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00075",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:asw-2",
+      "collector": "vlan_membership",
+      "title": "VLAN membership \u2014 asw-2",
+      "target": {
+        "device": "asw-2"
+      },
+      "params": {},
+      "command": "show vlan brief; show interface switchport",
+      "purpose": "Compare running VLAN membership to documented intent.",
+      "raw_output": "VLAN Name         Status    Ports\n---- ------------ --------- -------------------------------\n20   APP-DATA     active    Eth1/1, Eth1/49(T)\n30   STORAGE      active    Eth1/49(T), Eth1/2\n\nPort      Mode    Access  Trunk-allowed\nEth1/1    access  20      -\nEth1/49   trunk   -       20,30\nEth1/2    access  30      -",
+      "payload": {
+        "device": "asw-2",
+        "ports": [
+          {
+            "interface": "asw-2:Ethernet1/1",
+            "port": "Ethernet1/1",
+            "mode": "access",
+            "running_vlan": 20,
+            "running_allowed": null,
+            "intended_vlan": 20,
+            "intended_allowed": null,
+            "cable_peer": "srv-b:eth0",
+            "matches_intent": true
+          },
+          {
+            "interface": "asw-2:Ethernet1/49",
+            "port": "Ethernet1/49",
+            "mode": "trunk",
+            "running_vlan": null,
+            "running_allowed": [
+              20,
+              30
+            ],
+            "intended_vlan": null,
+            "intended_allowed": [
+              20,
+              30
+            ],
+            "cable_peer": "asw-1:Ethernet1/49",
+            "matches_intent": true
+          },
+          {
+            "interface": "asw-2:Ethernet1/2",
+            "port": "Ethernet1/2",
+            "mode": "access",
+            "running_vlan": 30,
+            "running_allowed": null,
+            "intended_vlan": 30,
+            "intended_allowed": null,
+            "cable_peer": null,
+            "matches_intent": true
+          }
+        ],
+        "mismatches": []
+      },
+      "interpretation": "All data ports on asw-2 match the documented VLAN intent.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Intent comes from the documented inventory; if the documentation is wrong, a 'mismatch' may be the documentation's error."
+      ],
+      "observations": [
+        {
+          "kind": "interface_vlan",
+          "id": "asw-2:Ethernet1/1",
+          "status": "ok",
+          "label": "VLAN 20"
+        },
+        {
+          "kind": "interface_vlan",
+          "id": "asw-2:Ethernet1/49",
+          "status": "ok",
+          "label": "VLAN [20, 30]"
+        },
+        {
+          "kind": "interface_vlan",
+          "id": "asw-2:Ethernet1/2",
+          "status": "ok",
+          "label": "VLAN 30"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:08.015691+00:00",
+      "sim_time_ms": 79500,
+      "content_sha256": "a01872a909f450751806f7a3ec9605fa8e1538d866782e46b76bf9d1ba6e84d6",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00081",
+      "seq": 81,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00076",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "reachability",
+      "title": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d73)",
+      "target": {
+        "src": "srv-a",
+        "dst": "srv-b"
+      },
+      "params": {
+        "count": 3,
+        "payload_bytes": 56,
+        "dont_fragment": false,
+        "ip_version": 4
+      },
+      "command": "ping -c 3 -s 56 192.0.2.12",
+      "purpose": "Test end-to-end IP reachability with ICMP echo probes.",
+      "raw_output": "PING 192.0.2.12 (192.0.2.12) 56(84) bytes of data.\n64 bytes from 192.0.2.12: icmp_seq=1 ttl=64 time=0.152 ms\n64 bytes from 192.0.2.12: icmp_seq=2 ttl=64 time=0.192 ms\n64 bytes from 192.0.2.12: icmp_seq=3 ttl=64 time=0.152 ms\n\n--- 192.0.2.12 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2012ms\nrtt min/avg/max/mdev = 0.152/0.165/0.192/0.019 ms",
+      "payload": {
+        "src": "srv-a",
+        "dst": "srv-b",
+        "src_ip": "192.0.2.11",
+        "dst_ip": "192.0.2.12",
+        "ip_version": 4,
+        "count": 3,
+        "payload_bytes": 56,
+        "packet_bytes": 84,
+        "dont_fragment": false,
+        "transmitted": 3,
+        "received": 3,
+        "errors": 0,
+        "loss_pct": 0.0,
+        "rtt_ms": {
+          "min": 0.152,
+          "avg": 0.165,
+          "max": 0.192,
+          "mdev": 0.019
+        },
+        "neighbor_resolved": true,
+        "failure_mode": "none"
+      },
+      "interpretation": "All 3 probes from srv-a to 192.0.2.12 were answered (56-byte payload). This confirms IP reachability for packets of this size in both directions at the time of the test. It does not prove that larger packets, sustained throughput, or other flows work.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "ICMP reachability shows only that echo requests/replies of this size were delivered; it is not application verification.",
+        "RTT values come from a simplified latency model; probe interval is simulated at 1 s (3 s simulated time)."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-a->srv-b",
+          "status": "up",
+          "label": "srv-a \u2192 srv-b"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:08.017783+00:00",
+      "sim_time_ms": 82500,
+      "content_sha256": "8ca8acf73106f2270a47364136c2920f84c3aa20698769ba9f1767154a4e5330",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00082",
+      "seq": 82,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00077",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "neighbor_table",
+      "title": "Neighbor table \u2014 srv-a",
+      "target": {
+        "device": "srv-a"
+      },
+      "params": {},
+      "command": "ip neigh show dev eth0",
+      "purpose": "Show ARP/ND or MAC-learning state.",
+      "raw_output": "192.0.2.1 lladdr 02:00:5e:30:00:01 REACHABLE\n192.0.2.12 lladdr 02:00:5e:10:00:12 REACHABLE",
+      "payload": {
+        "device": "srv-a",
+        "neighbors": [
+          {
+            "ip": "192.0.2.1",
+            "mac": "02:00:5e:30:00:01",
+            "state": "REACHABLE"
+          },
+          {
+            "ip": "192.0.2.12",
+            "mac": "02:00:5e:10:00:12",
+            "state": "REACHABLE"
+          }
+        ]
+      },
+      "interpretation": "All neighbor entries are resolved (REACHABLE).",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Neighbor/MAC entries age out; absence of an entry can simply mean no recent traffic."
+      ],
+      "observations": [
+        {
+          "kind": "neighbor",
+          "id": "srv-a->gw-1",
+          "status": "up",
+          "label": "ARP REACHABLE"
+        },
+        {
+          "kind": "neighbor",
+          "id": "srv-a->srv-b",
+          "status": "up",
+          "label": "ARP REACHABLE"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:08.019159+00:00",
+      "sim_time_ms": 83500,
+      "content_sha256": "b6853674269fd6d20a7df1a7378d825343d8d88256b58da3273f9a5af6bd88c8",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00083",
+      "seq": 83,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00078",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "reachability",
+      "title": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d710)",
+      "target": {
+        "src": "srv-a",
+        "dst": "srv-b"
+      },
+      "params": {
+        "count": 10,
+        "payload_bytes": 56,
+        "dont_fragment": false,
+        "ip_version": 4
+      },
+      "command": "ping -c 10 -s 56 192.0.2.12",
+      "purpose": "Test end-to-end IP reachability with ICMP echo probes.",
+      "raw_output": "PING 192.0.2.12 (192.0.2.12) 56(84) bytes of data.\n64 bytes from 192.0.2.12: icmp_seq=1 ttl=64 time=0.163 ms\n64 bytes from 192.0.2.12: icmp_seq=2 ttl=64 time=0.156 ms\n64 bytes from 192.0.2.12: icmp_seq=3 ttl=64 time=0.184 ms\n64 bytes from 192.0.2.12: icmp_seq=4 ttl=64 time=0.168 ms\n64 bytes from 192.0.2.12: icmp_seq=5 ttl=64 time=0.158 ms\n64 bytes from 192.0.2.12: icmp_seq=6 ttl=64 time=0.156 ms\n64 bytes from 192.0.2.12: icmp_seq=7 ttl=64 time=0.185 ms\n64 bytes from 192.0.2.12: icmp_seq=8 ttl=64 time=0.157 ms\n64 bytes from 192.0.2.12: icmp_seq=9 ttl=64 time=0.159 ms\n64 bytes from 192.0.2.12: icmp_seq=10 ttl=64 time=0.155 ms\n\n--- 192.0.2.12 ping statistics ---\n10 packets transmitted, 10 received, 0% packet loss, time 9012ms\nrtt min/avg/max/mdev = 0.155/0.164/0.185/0.011 ms",
+      "payload": {
+        "src": "srv-a",
+        "dst": "srv-b",
+        "src_ip": "192.0.2.11",
+        "dst_ip": "192.0.2.12",
+        "ip_version": 4,
+        "count": 10,
+        "payload_bytes": 56,
+        "packet_bytes": 84,
+        "dont_fragment": false,
+        "transmitted": 10,
+        "received": 10,
+        "errors": 0,
+        "loss_pct": 0.0,
+        "rtt_ms": {
+          "min": 0.155,
+          "avg": 0.164,
+          "max": 0.185,
+          "mdev": 0.011
+        },
+        "neighbor_resolved": true,
+        "failure_mode": "none"
+      },
+      "interpretation": "All 10 probes from srv-a to 192.0.2.12 were answered (56-byte payload). This confirms IP reachability for packets of this size in both directions at the time of the test. It does not prove that larger packets, sustained throughput, or other flows work.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "ICMP reachability shows only that echo requests/replies of this size were delivered; it is not application verification.",
+        "RTT values come from a simplified latency model; probe interval is simulated at 1 s (10 s simulated time)."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-a->srv-b",
+          "status": "up",
+          "label": "srv-a \u2192 srv-b"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:08.021637+00:00",
+      "sim_time_ms": 93500,
+      "content_sha256": "344ef9f1190d77a582e91c6a5827ef2d5cf928065e0752bb884eeb70dfa35b6f",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00084",
+      "seq": 84,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00079",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-b",
+      "collector": "reachability",
+      "title": "Reachability srv-b \u2192 srv-a (IPv4, 56 B, \u00d710)",
+      "target": {
+        "src": "srv-b",
+        "dst": "srv-a"
+      },
+      "params": {
+        "count": 10,
+        "payload_bytes": 56,
+        "dont_fragment": false,
+        "ip_version": 4
+      },
+      "command": "ping -c 10 -s 56 192.0.2.11",
+      "purpose": "Test end-to-end IP reachability with ICMP echo probes.",
+      "raw_output": "PING 192.0.2.11 (192.0.2.11) 56(84) bytes of data.\n64 bytes from 192.0.2.11: icmp_seq=1 ttl=64 time=0.167 ms\n64 bytes from 192.0.2.11: icmp_seq=2 ttl=64 time=0.154 ms\n64 bytes from 192.0.2.11: icmp_seq=3 ttl=64 time=0.191 ms\n64 bytes from 192.0.2.11: icmp_seq=4 ttl=64 time=0.155 ms\n64 bytes from 192.0.2.11: icmp_seq=5 ttl=64 time=0.166 ms\n64 bytes from 192.0.2.11: icmp_seq=6 ttl=64 time=0.181 ms\n64 bytes from 192.0.2.11: icmp_seq=7 ttl=64 time=0.152 ms\n64 bytes from 192.0.2.11: icmp_seq=8 ttl=64 time=0.172 ms\n64 bytes from 192.0.2.11: icmp_seq=9 ttl=64 time=0.189 ms\n64 bytes from 192.0.2.11: icmp_seq=10 ttl=64 time=0.155 ms\n\n--- 192.0.2.11 ping statistics ---\n10 packets transmitted, 10 received, 0% packet loss, time 9012ms\nrtt min/avg/max/mdev = 0.152/0.168/0.191/0.014 ms",
+      "payload": {
+        "src": "srv-b",
+        "dst": "srv-a",
+        "src_ip": "192.0.2.12",
+        "dst_ip": "192.0.2.11",
+        "ip_version": 4,
+        "count": 10,
+        "payload_bytes": 56,
+        "packet_bytes": 84,
+        "dont_fragment": false,
+        "transmitted": 10,
+        "received": 10,
+        "errors": 0,
+        "loss_pct": 0.0,
+        "rtt_ms": {
+          "min": 0.152,
+          "avg": 0.168,
+          "max": 0.191,
+          "mdev": 0.014
+        },
+        "neighbor_resolved": true,
+        "failure_mode": "none"
+      },
+      "interpretation": "All 10 probes from srv-b to 192.0.2.11 were answered (56-byte payload). This confirms IP reachability for packets of this size in both directions at the time of the test. It does not prove that larger packets, sustained throughput, or other flows work.",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "ICMP reachability shows only that echo requests/replies of this size were delivered; it is not application verification.",
+        "RTT values come from a simplified latency model; probe interval is simulated at 1 s (10 s simulated time)."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-b->srv-a",
+          "status": "up",
+          "label": "srv-b \u2192 srv-a"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:08.024329+00:00",
+      "sim_time_ms": 103500,
+      "content_sha256": "b0a4de64108480c2526fc11122916af22ea0dc0dae991753cd4ab01cf5932227",
+      "next_steps": []
+    },
+    {
+      "id": "EV-00085",
+      "seq": 85,
+      "investigation_id": "INV-0011",
+      "execution_id": "EXE-0011",
+      "diagnostic_run_id": "DR-00080",
+      "phase": "verification",
+      "source_mode": "SIMULATED",
+      "source_id": "sim:srv-a",
+      "collector": "throughput",
+      "title": "Throughput srv-a \u2192 srv-b (10s, P1)",
+      "target": {
+        "src": "srv-a",
+        "dst": "srv-b"
+      },
+      "params": {
+        "duration_s": 10,
+        "parallel": 1
+      },
+      "command": "iperf3 -c 192.0.2.12 -t 10 -P 1 --connect-timeout 3000",
+      "purpose": "Bounded TCP throughput test.",
+      "raw_output": "Connecting to host 192.0.2.12, port 5201\n[  5] local 192.0.2.11 port 43122 connected to 192.0.2.12 port 5201\n[ ID] Interval           Transfer     Bitrate         Retr\n[  5]   0.00-1.00  sec  2.93 GBytes  23.40 Gbits/sec\n[  5]   1.00-2.00  sec  2.91 GBytes  23.30 Gbits/sec\n[  5]   2.00-3.00  sec  2.92 GBytes  23.33 Gbits/sec\n[  5]   3.00-4.00  sec  2.91 GBytes  23.24 Gbits/sec\n[  5]   4.00-5.00  sec  2.91 GBytes  23.28 Gbits/sec\n[  5]   5.00-6.00  sec  2.91 GBytes  23.26 Gbits/sec\n[  5]   6.00-7.00  sec  2.93 GBytes  23.42 Gbits/sec\n[  5]   7.00-8.00  sec  2.93 GBytes  23.42 Gbits/sec\n[  5]   8.00-9.00  sec  2.91 GBytes  23.27 Gbits/sec\n[  5]   9.00-10.00  sec  2.91 GBytes  23.28 Gbits/sec\n- - - - - - - - - - - - - - - - - - - - - - - - -\n[  5]   0.00-10.00  sec  29.15 GBytes  23.32 Gbits/sec     0             sender\n[  5]   0.00-10.00  sec  29.15 GBytes  23.32 Gbits/sec                  receiver",
+      "payload": {
+        "src": "srv-a",
+        "dst": "srv-b",
+        "duration_s": 10,
+        "parallel": 1,
+        "protocol": "TCP",
+        "connected": true,
+        "sender_gbps": 23.318,
+        "receiver_gbps": 23.318,
+        "retransmits": 0,
+        "intervals": [
+          {
+            "start_s": 0,
+            "end_s": 1,
+            "gbps": 23.402
+          },
+          {
+            "start_s": 1,
+            "end_s": 2,
+            "gbps": 23.299
+          },
+          {
+            "start_s": 2,
+            "end_s": 3,
+            "gbps": 23.326
+          },
+          {
+            "start_s": 3,
+            "end_s": 4,
+            "gbps": 23.241
+          },
+          {
+            "start_s": 4,
+            "end_s": 5,
+            "gbps": 23.277
+          },
+          {
+            "start_s": 5,
+            "end_s": 6,
+            "gbps": 23.26
+          },
+          {
+            "start_s": 6,
+            "end_s": 7,
+            "gbps": 23.416
+          },
+          {
+            "start_s": 7,
+            "end_s": 8,
+            "gbps": 23.417
+          },
+          {
+            "start_s": 8,
+            "end_s": 9,
+            "gbps": 23.268
+          },
+          {
+            "start_s": 9,
+            "end_s": 10,
+            "gbps": 23.278
+          }
+        ],
+        "mss_bytes": 8960,
+        "link_speed_gbps": 25.0,
+        "stalled": false
+      },
+      "interpretation": "Average 23.32 Gbit/s over 10 s with 0 retransmissions on a 25 Gbit/s path (MSS 8960).",
+      "limitations": [
+        "Simulated output generated from the scenario state \u2014 not captured from real equipment.",
+        "Throughput is computed by a simplified model (link rate \u00d7 framing efficiency \u00d7 loss factor). It is not a prediction of real TCP behavior.",
+        "Test bounded to 10 s simulated time."
+      ],
+      "observations": [
+        {
+          "kind": "reachability",
+          "id": "srv-a->srv-b",
+          "status": "up",
+          "label": "23.32 Gbit/s"
+        }
+      ],
+      "verdict": "ok",
+      "collection_status": "completed",
+      "collected_at": "2026-11-13T07:52:08.026017+00:00",
+      "sim_time_ms": 114000,
+      "content_sha256": "727e0c1a283b1391c1d3f449a0a85680d382672f4cae4faf4a03cb7a16508dc8",
+      "next_steps": []
+    }
+  ],
+  "hypotheses": [],
+  "diagnosis": {
+    "category": "l2_vlan",
+    "category_label": "Layer 2 VLAN misconfiguration",
+    "statement": "asw-2 Ethernet1/1 is running access VLAN 30; documented intent is VLAN 20. Physical link is up at both ends; ARP from Server A to 192.0.2.12 fails.",
+    "recorded_at": "2026-11-13T07:52:04.124845+00:00",
+    "cited_evidence": [
+      {
+        "id": "EV-00074",
+        "title": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d710)",
+        "verdict": "fail"
+      },
+      {
+        "id": "EV-00075",
+        "title": "Interface state \u2014 asw-2:Ethernet1/1",
+        "verdict": "ok"
+      },
+      {
+        "id": "EV-00076",
+        "title": "Interface state \u2014 srv-b:eth0",
+        "verdict": "ok"
+      },
+      {
+        "id": "EV-00077",
+        "title": "VLAN membership \u2014 asw-2",
+        "verdict": "fail"
+      }
+    ]
+  },
+  "corrective_actions": [
+    {
+      "id": "RPR-0004",
+      "action": "set_access_vlan",
+      "target": {
+        "interface": "asw-2:Ethernet1/1"
+      },
+      "params": {
+        "vlan": 20
+      },
+      "description": "Set access VLAN on asw-2:Ethernet1/1: 30 \u2192 20",
+      "command": "configure terminal\n interface Ethernet1/1\n  switchport access vlan 20\n end",
+      "source_mode": "SIMULATED",
+      "changed_resources": [
+        "asw-2:Ethernet1/1"
+      ],
+      "outcome": "state_changed",
+      "notes": "",
+      "evidence_id": "EV-00078",
+      "applied_at": "2026-11-13T07:52:06.047952+00:00",
+      "sim_time_ms": 77500
+    }
+  ],
+  "verification": [
+    {
+      "id": "VR-0004",
+      "started_at": "2026-11-13T07:52:08.013312+00:00",
+      "completed_at": "2026-11-13T07:52:08.027460+00:00",
+      "passed": true,
+      "checks": [
+        {
+          "id": "vlan_config",
+          "label": "Intended VLAN configuration restored",
+          "rationale": "Running VLAN membership on both access switches matches documented intent.",
+          "passed": true,
+          "detail": "asw-1: matches intent; asw-2: matches intent",
+          "evidence_ids": [
+            "EV-00079",
+            "EV-00080"
+          ]
+        },
+        {
+          "id": "neighbor",
+          "label": "Neighbor resolution",
+          "rationale": "Server A resolves Server B's MAC (after a probe refreshes ARP).",
+          "passed": true,
+          "detail": "192.0.2.12 \u2192 02:00:5e:10:00:12 REACHABLE (expected 02:00:5e:10:00:12 REACHABLE)",
+          "evidence_ids": [
+            "EV-00081",
+            "EV-00082"
+          ]
+        },
+        {
+          "id": "bidirectional",
+          "label": "Bidirectional connectivity",
+          "rationale": "10/10 probes in each direction.",
+          "passed": true,
+          "detail": "srv-a\u2192srv-b: 10/10; srv-b\u2192srv-a: 10/10",
+          "evidence_ids": [
+            "EV-00083",
+            "EV-00084"
+          ]
+        },
+        {
+          "id": "throughput",
+          "label": "Application-level throughput",
+          "rationale": "Bounded TCP test reaches \u226590% of the identical baseline run.",
+          "passed": true,
+          "detail": "23.32 Gbit/s vs baseline 23.28 Gbit/s (100%, need \u226590%; same params: 10 s, P1, n=1 run each)",
+          "evidence_ids": [
+            "EV-00085"
+          ]
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "id": 60,
+      "kind": "investigation_opened",
+      "message": "INV-0011 opened (guided, SIMULATED) for scenario wrong-vlan@1",
+      "at": "2026-11-13T07:51:54.109651+00:00",
+      "sim_time_ms": 0,
+      "data": {
+        "scenario": "wrong-vlan@1",
+        "mode": "guided",
+        "source_mode": "SIMULATED"
+      }
+    },
+    {
+      "id": 61,
+      "kind": "baseline_captured",
+      "message": "Healthy baseline captured (5 observations)",
+      "at": "2026-11-13T07:51:54.283251+00:00",
+      "sim_time_ms": 32500,
+      "data": {
+        "evidence_ids": [
+          "EV-00069",
+          "EV-00070",
+          "EV-00071",
+          "EV-00072",
+          "EV-00073"
+        ]
+      }
+    },
+    {
+      "id": 62,
+      "kind": "fault_injected",
+      "message": "Scenario fault injected (location withheld until resolution)",
+      "at": "2026-11-13T07:51:56.225524+00:00",
+      "sim_time_ms": 62500,
+      "data": {
+        "hidden": true,
+        "changed_resources": [
+          "asw-2:Ethernet1/1"
+        ]
+      }
+    },
+    {
+      "id": 63,
+      "kind": "diagnostic",
+      "message": "Reachability srv-a \u2192 srv-b (IPv4, 56 B, \u00d710): FAIL",
+      "at": "2026-11-13T07:51:58.205741+00:00",
+      "sim_time_ms": 72500,
+      "data": {
+        "evidence_id": "EV-00074",
+        "action": "reachability"
+      }
+    },
+    {
+      "id": 64,
+      "kind": "diagnostic",
+      "message": "Interface state \u2014 asw-2:Ethernet1/1: OK",
+      "at": "2026-11-13T07:52:00.180139+00:00",
+      "sim_time_ms": 73500,
+      "data": {
+        "evidence_id": "EV-00075",
+        "action": "interface_state"
+      }
+    },
+    {
+      "id": 65,
+      "kind": "diagnostic",
+      "message": "Interface state \u2014 srv-b:eth0: OK",
+      "at": "2026-11-13T07:52:00.194662+00:00",
+      "sim_time_ms": 74500,
+      "data": {
+        "evidence_id": "EV-00076",
+        "action": "interface_state"
+      }
+    },
+    {
+      "id": 66,
+      "kind": "diagnostic",
+      "message": "VLAN membership \u2014 asw-2: FAIL",
+      "at": "2026-11-13T07:52:02.129019+00:00",
+      "sim_time_ms": 75500,
+      "data": {
+        "evidence_id": "EV-00077",
+        "action": "vlan_membership"
+      }
+    },
+    {
+      "id": 67,
+      "kind": "diagnosis_recorded",
+      "message": "Diagnosis: Layer 2 VLAN misconfiguration \u2014 asw-2 Ethernet1/1 is running access VLAN 30; documented intent is VLAN 20. Physical link is up at both ends; ARP from Server A to 192.0.2.12 fails.",
+      "at": "2026-11-13T07:52:04.124859+00:00",
+      "sim_time_ms": 75500,
+      "data": {
+        "category": "l2_vlan",
+        "evidence_ids": [
+          "EV-00074",
+          "EV-00075",
+          "EV-00076",
+          "EV-00077"
+        ],
+        "previous": null
+      }
+    },
+    {
+      "id": 68,
+      "kind": "repair_applied",
+      "message": "Set access VLAN on asw-2:Ethernet1/1: 30 \u2192 20 (state_changed)",
+      "at": "2026-11-13T07:52:06.047986+00:00",
+      "sim_time_ms": 77500,
+      "data": {
+        "repair_id": "RPR-0004",
+        "evidence_id": "EV-00078"
+      }
+    },
+    {
+      "id": 69,
+      "kind": "verification_passed",
+      "message": "Verification VR-0004 passed (4/4 checks)",
+      "at": "2026-11-13T07:52:08.027503+00:00",
+      "sim_time_ms": 114000,
+      "data": {
+        "verification_id": "VR-0004"
+      }
+    },
+    {
+      "id": 70,
+      "kind": "resolved",
+      "message": "Investigation resolved \u2014 all resolution criteria met",
+      "at": "2026-11-13T07:52:09.990766+00:00",
+      "sim_time_ms": 114000,
+      "data": {}
+    }
+  ],
+  "metrics": {
+    "wall_clock": {
+      "note": "Real elapsed time of operator interaction (UTC wall clock).",
+      "investigation_started_at": "2026-11-13T07:51:54.109177+00:00",
+      "fault_injected_at": "2026-11-13T07:51:56.225514+00:00",
+      "first_diagnostic_at": "2026-11-13T07:51:58.203960+00:00",
+      "diagnosis_recorded_at": "2026-11-13T07:52:04.124845+00:00",
+      "repair_applied_at": "2026-11-13T07:52:06.047952+00:00",
+      "verification_completed_at": "2026-11-13T07:52:08.027460+00:00",
+      "resolved_at": "2026-11-13T07:52:09.990758+00:00",
+      "fault_to_first_action_s": 2.0,
+      "fault_to_diagnosis_s": 7.9,
+      "diagnosis_to_repair_s": 1.9,
+      "repair_to_verified_s": 2.0,
+      "fault_to_resolved_s": 13.8
+    },
+    "simulated_time": {
+      "note": "Simulated network time advanced by modeled action durations (probes at 1 s intervals, test durations, field procedures). Not real time.",
+      "applies": true,
+      "clock_ms": 114000,
+      "fault_onset_ms": 62500,
+      "simulated_detection_latency_ms": null,
+      "detection_mechanism": null
+    },
+    "counts": {
+      "diagnostic_actions": 4,
+      "repairs": 1,
+      "failed_verifications": 0,
+      "reopened": 0
+    }
+  },
+  "limitations": [
+    "All device output in this report is SIMULATED, generated from a deterministic scenario model \u2014 not captured from real equipment.",
+    "Patch panels, trunk and optics are modeled; no physical fiber was tested. Optical loss figures are estimates from modeled DOM readings, not OTDR or certified results.",
+    "Throughput and RTT values come from simplified models and are not performance predictions.",
+    "Simulated time (probe intervals, field procedures) is distinct from the wall-clock time of operator interaction.",
+    "ICMP reachability shows only that echo requests/replies of this size were delivered; it is not application verification.",
+    "RTT values come from a simplified latency model; probe interval is simulated at 1 s (10 s simulated time).",
+    "Throughput is computed by a simplified model (link rate \u00d7 framing efficiency \u00d7 loss factor). It is not a prediction of real TCP behavior.",
+    "Test bounded to 10 s simulated time.",
+    "Intent comes from the documented inventory; if the documentation is wrong, a 'mismatch' may be the documentation's error.",
+    "Observes this end only; the far end may report a different view.",
+    "Simulated change to scenario state.",
+    "RTT values come from a simplified latency model; probe interval is simulated at 1 s (3 s simulated time).",
+    "Neighbor/MAC entries age out; absence of an entry can simply mean no recent traffic."
+  ],
+  "lessons_learned": "",
+  "answer_key": {
+    "diagnosis_category": "l2_vlan",
+    "diagnosis_label": "Layer 2 VLAN misconfiguration",
+    "fault_mutation": "One access port's VLAN membership is changed from the intended VLAN 20 to VLAN 30.",
+    "corrective_action": "Restore asw-2 Ethernet1/1 to access VLAN 20 (change only that port).",
+    "diagnosis_matched": true
+  },
+  "resolution_criteria": [
+    {
+      "id": "baseline",
+      "label": "Healthy baseline captured",
+      "met": true
+    },
+    {
+      "id": "fault",
+      "label": "Fault introduced and observed",
+      "met": true
+    },
+    {
+      "id": "diagnosis",
+      "label": "Diagnosis recorded with cited evidence",
+      "met": true
+    },
+    {
+      "id": "repair",
+      "label": "Corrective action applied after diagnosis",
+      "met": true
+    },
+    {
+      "id": "verification",
+      "label": "Scenario-specific verification passed after the latest repair",
+      "met": true
+    }
+  ],
+  "provenance": {
+    "evidence_count": 17,
+    "source_modes": [
+      "SIMULATED"
+    ],
+    "integrity": "Each evidence item carries a SHA-256 of its content at collection time; evidence rows are append-only."
+  }
+}

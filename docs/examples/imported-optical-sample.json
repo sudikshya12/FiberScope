@@ -1,0 +1,8 @@
+{
+  "format": "fiberscope.optical-observation.v1",
+  "source_note": "EXAMPLE ONLY — hand-written sample values to demonstrate the import path; not from real hardware.",
+  "observations": [
+    { "interface_id": "asw-1:Ethernet1/1", "observed_at": "2026-01-15T10:00:00Z", "tx_power_dbm": -2.3, "rx_power_dbm": -3.4, "temperature_c": 38.0 },
+    { "interface_id": "srv-a:eth0", "observed_at": "2026-01-15T10:00:00Z", "tx_power_dbm": -1.9, "rx_power_dbm": -3.6, "temperature_c": 41.5 }
+  ]
+}

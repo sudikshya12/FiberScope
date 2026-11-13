@@ -1,0 +1,43 @@
+evidence_id,phase,source_mode,collector,target,metric,value,unit,collected_at_utc,sim_time_ms,test_parameters
+EV-00086,baseline,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,tx_power_dbm,-2.2,dBm,2026-11-13T07:52:55.714884+00:00,2000,'
+EV-00086,baseline,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,rx_power_dbm,-3.1,dBm,2026-11-13T07:52:55.714884+00:00,2000,'
+EV-00086,baseline,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,temperature_c,37.8,°C,2026-11-13T07:52:55.714884+00:00,2000,'
+EV-00086,baseline,SIMULATED,optical_telemetry,srv-a:eth0,tx_power_dbm,-1.8,dBm,2026-11-13T07:52:55.714884+00:00,2000,'
+EV-00086,baseline,SIMULATED,optical_telemetry,srv-a:eth0,rx_power_dbm,-3.5,dBm,2026-11-13T07:52:55.714884+00:00,2000,'
+EV-00086,baseline,SIMULATED,optical_telemetry,srv-a:eth0,temperature_c,41.2,°C,2026-11-13T07:52:55.714884+00:00,2000,'
+EV-00086,baseline,SIMULATED,optical_telemetry,srv-a:eth0 → asw-1:Ethernet1/1,estimated_loss (ESTIMATE),1.3,dB,2026-11-13T07:52:55.714884+00:00,2000,'
+EV-00086,baseline,SIMULATED,optical_telemetry,asw-1:Ethernet1/1 → srv-a:eth0,estimated_loss (ESTIMATE),1.3,dB,2026-11-13T07:52:55.714884+00:00,2000,'
+EV-00087,baseline,SIMULATED,reachability,src=srv-a dst=srv-b,loss,0.0,%,2026-11-13T07:52:55.721396+00:00,12000,count=10 payload_bytes=56 dont_fragment=False ip_version=4
+EV-00087,baseline,SIMULATED,reachability,src=srv-a dst=srv-b,probes_received,10,of 10,2026-11-13T07:52:55.721396+00:00,12000,count=10 payload_bytes=56 dont_fragment=False ip_version=4
+EV-00087,baseline,SIMULATED,reachability,src=srv-a dst=srv-b,rtt_avg,0.172,ms,2026-11-13T07:52:55.721396+00:00,12000,count=10 payload_bytes=56 dont_fragment=False ip_version=4
+EV-00088,baseline,SIMULATED,throughput,src=srv-a dst=srv-b,throughput_sender,23.31,Gbit/s,2026-11-13T07:52:55.726000+00:00,22500,duration_s=10 parallel=1
+EV-00088,baseline,SIMULATED,throughput,src=srv-a dst=srv-b,retransmits,0,segments,2026-11-13T07:52:55.726000+00:00,22500,duration_s=10 parallel=1
+EV-00090,investigation,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,tx_power_dbm,-2.2,dBm,2026-11-13T07:52:59.708394+00:00,114500,'
+EV-00090,investigation,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,rx_power_dbm,-11.5,dBm,2026-11-13T07:52:59.708394+00:00,114500,'
+EV-00090,investigation,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,temperature_c,37.8,°C,2026-11-13T07:52:59.708394+00:00,114500,'
+EV-00090,investigation,SIMULATED,optical_telemetry,srv-a:eth0,tx_power_dbm,-1.8,dBm,2026-11-13T07:52:59.708394+00:00,114500,'
+EV-00090,investigation,SIMULATED,optical_telemetry,srv-a:eth0,rx_power_dbm,-3.5,dBm,2026-11-13T07:52:59.708394+00:00,114500,'
+EV-00090,investigation,SIMULATED,optical_telemetry,srv-a:eth0,temperature_c,41.2,°C,2026-11-13T07:52:59.708394+00:00,114500,'
+EV-00090,investigation,SIMULATED,optical_telemetry,srv-a:eth0 → asw-1:Ethernet1/1,estimated_loss (ESTIMATE),9.7,dB,2026-11-13T07:52:59.708394+00:00,114500,'
+EV-00090,investigation,SIMULATED,optical_telemetry,asw-1:Ethernet1/1 → srv-a:eth0,estimated_loss (ESTIMATE),1.3,dB,2026-11-13T07:52:59.708394+00:00,114500,'
+EV-00095,verification,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,tx_power_dbm,-2.2,dBm,2026-11-13T07:53:10.574814+00:00,656500,'
+EV-00095,verification,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,rx_power_dbm,-3.1,dBm,2026-11-13T07:53:10.574814+00:00,656500,'
+EV-00095,verification,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,temperature_c,37.8,°C,2026-11-13T07:53:10.574814+00:00,656500,'
+EV-00095,verification,SIMULATED,optical_telemetry,srv-a:eth0,tx_power_dbm,-1.8,dBm,2026-11-13T07:53:10.574814+00:00,656500,'
+EV-00095,verification,SIMULATED,optical_telemetry,srv-a:eth0,rx_power_dbm,-3.5,dBm,2026-11-13T07:53:10.574814+00:00,656500,'
+EV-00095,verification,SIMULATED,optical_telemetry,srv-a:eth0,temperature_c,41.2,°C,2026-11-13T07:53:10.574814+00:00,656500,'
+EV-00095,verification,SIMULATED,optical_telemetry,srv-a:eth0 → asw-1:Ethernet1/1,estimated_loss (ESTIMATE),1.3,dB,2026-11-13T07:53:10.574814+00:00,656500,'
+EV-00095,verification,SIMULATED,optical_telemetry,asw-1:Ethernet1/1 → srv-a:eth0,estimated_loss (ESTIMATE),1.3,dB,2026-11-13T07:53:10.574814+00:00,656500,'
+EV-00096,verification,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,tx_power_dbm,-2.2,dBm,2026-11-13T07:53:10.577759+00:00,658500,'
+EV-00096,verification,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,rx_power_dbm,-3.1,dBm,2026-11-13T07:53:10.577759+00:00,658500,'
+EV-00096,verification,SIMULATED,optical_telemetry,asw-1:Ethernet1/1,temperature_c,37.8,°C,2026-11-13T07:53:10.577759+00:00,658500,'
+EV-00096,verification,SIMULATED,optical_telemetry,srv-a:eth0,tx_power_dbm,-1.8,dBm,2026-11-13T07:53:10.577759+00:00,658500,'
+EV-00096,verification,SIMULATED,optical_telemetry,srv-a:eth0,rx_power_dbm,-3.5,dBm,2026-11-13T07:53:10.577759+00:00,658500,'
+EV-00096,verification,SIMULATED,optical_telemetry,srv-a:eth0,temperature_c,41.2,°C,2026-11-13T07:53:10.577759+00:00,658500,'
+EV-00096,verification,SIMULATED,optical_telemetry,srv-a:eth0 → asw-1:Ethernet1/1,estimated_loss (ESTIMATE),1.3,dB,2026-11-13T07:53:10.577759+00:00,658500,'
+EV-00096,verification,SIMULATED,optical_telemetry,asw-1:Ethernet1/1 → srv-a:eth0,estimated_loss (ESTIMATE),1.3,dB,2026-11-13T07:53:10.577759+00:00,658500,'
+EV-00099,verification,SIMULATED,reachability,src=srv-a dst=srv-b,loss,0.0,%,2026-11-13T07:53:10.585300+00:00,670500,count=10 payload_bytes=56 dont_fragment=False ip_version=4
+EV-00099,verification,SIMULATED,reachability,src=srv-a dst=srv-b,probes_received,10,of 10,2026-11-13T07:53:10.585300+00:00,670500,count=10 payload_bytes=56 dont_fragment=False ip_version=4
+EV-00099,verification,SIMULATED,reachability,src=srv-a dst=srv-b,rtt_avg,0.171,ms,2026-11-13T07:53:10.585300+00:00,670500,count=10 payload_bytes=56 dont_fragment=False ip_version=4
+EV-00100,verification,SIMULATED,throughput,src=srv-a dst=srv-b,throughput_sender,23.306,Gbit/s,2026-11-13T07:53:10.587283+00:00,681000,duration_s=10 parallel=1
+EV-00100,verification,SIMULATED,throughput,src=srv-a dst=srv-b,retransmits,0,segments,2026-11-13T07:53:10.587283+00:00,681000,duration_s=10 parallel=1
