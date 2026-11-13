@@ -151,8 +151,13 @@ export function ActionPalette({ inv, cat, selection, onEvidence, disabledReason 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selection])
   const run = useInvMutation(inv.id, async (_: void) => {
-    const clean = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined))
-    const r = await api.diagnostic(inv.id, act!.key, target, clean)
+    // Send only the fields this action defines — never stale fields from a previously opened action.
+    const allowedParams = Object.keys(act!.params_schema.properties ?? {})
+    const clean = Object.fromEntries(Object.entries(params).filter(([k, v]) => v !== undefined && allowedParams.includes(k)))
+    const keys = targetKeys(act!)
+    const defaults = defaultTarget(cat, act!, selection, inv.focus)
+    const tgt = Object.fromEntries(keys.map((k) => [k, target[k] ?? defaults[k]]))
+    const r = await api.diagnostic(inv.id, act!.key, tgt, clean)
     onEvidence(r.evidence)
     return r
   })
