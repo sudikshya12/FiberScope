@@ -370,7 +370,7 @@ export default function DevicePage() {
               title={`No device "${id}"`}
               action={
                 <div className="flex flex-wrap justify-center gap-2">
-                  <Link to="/lab" className={linkBtn('primary', true)}>
+                  <Link to="/workbench" className={linkBtn('primary', true)}>
                     Open network workbench
                   </Link>
                   <Link to="/cables" className={linkBtn('secondary', true)}>
@@ -402,7 +402,7 @@ export default function DevicePage() {
   return (
     <Page wide>
       <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-2 text-[12.5px] text-muted">
-        <Link to="/lab" className="inline-flex items-center gap-1 hover:text-ink">
+        <Link to="/workbench" className="inline-flex items-center gap-1 hover:text-ink">
           <ArrowLeft className="size-3.5" aria-hidden /> Network workbench
         </Link>
         <span className="text-faint">/</span>
@@ -436,7 +436,7 @@ export default function DevicePage() {
           <Link to={`/cables?device=${encodeURIComponent(d.id)}`} className={linkBtn('secondary')}>
             <CableIcon className="size-4" aria-hidden /> Cables on {d.id}
           </Link>
-          <Link to="/lab" className={linkBtn('primary')}>
+          <Link to="/workbench" className={linkBtn('primary')}>
             <Network className="size-4" aria-hidden /> Open in workbench
           </Link>
         </div>

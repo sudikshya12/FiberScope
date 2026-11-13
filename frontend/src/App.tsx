@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router'
 import { LoadingBlock } from './components/ui'
 import { AppShell } from './components/AppShell'
 const About = lazy(() => import('./pages/About'))
+const Home = lazy(() => import('./pages/Home'))
 const LabPage = lazy(() => import('./pages/Lab'))
 const Scenarios = lazy(() => import('./pages/Scenarios'))
 const Investigations = lazy(() => import('./pages/Investigations'))
@@ -21,7 +22,8 @@ export default function App() {
     <Suspense fallback={<div className="p-8"><LoadingBlock rows={5} label="Loading page" /></div>}>
     <Routes>
       <Route element={<AppShell />}>
-        <Route index element={<LabPage />} />
+        <Route index element={<Home />} />
+        <Route path="workbench" element={<LabPage />} />
         <Route path="lab" element={<LabPage />} />
         <Route path="scenarios" element={<Scenarios />} />
         <Route path="investigations" element={<Investigations />} />

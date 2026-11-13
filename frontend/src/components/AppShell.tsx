@@ -33,7 +33,7 @@ const RESOURCES: { to: string; label: string; hint: string; icon: ReactNode }[] 
 function useActive() {
   const { pathname } = useLocation()
   return {
-    workbench: pathname === '/' || pathname === '/lab' || /^\/investigations\/[^/]+/.test(pathname),
+    workbench: pathname === '/workbench' || pathname === '/lab' || /^\/investigations\/[^/]+/.test(pathname),
     scenarios: pathname.startsWith('/scenarios'),
     investigations: pathname === '/investigations' || pathname.startsWith('/reports'),
     resources: RESOURCES.some((r) => pathname.startsWith(r.to)) || pathname.startsWith('/devices'),
@@ -114,7 +114,7 @@ function MobileMenu() {
   const [open, setOpen] = useState(false)
   const loc = useLocation()
   useEffect(() => setOpen(false), [loc.pathname])
-  const items = [{ to: '/', label: 'Workbench' }, { to: '/scenarios', label: 'Scenarios' }, { to: '/investigations', label: 'Investigations' }, ...RESOURCES, { to: '/settings', label: 'Settings' }]
+  const items = [{ to: '/', label: 'Home' }, { to: '/workbench', label: 'Workbench' }, { to: '/scenarios', label: 'Scenarios' }, { to: '/investigations', label: 'Investigations' }, ...RESOURCES, { to: '/settings', label: 'Settings' }]
   return (
     <RDialog.Root open={open} onOpenChange={setOpen}>
       <RDialog.Trigger className="grid size-9 place-items-center rounded-md text-ink hover:bg-canvas md:hidden" aria-label="Open navigation">
@@ -158,7 +158,7 @@ function MobileMenu() {
 export function AppShell() {
   const loc = useLocation()
   const active = useActive()
-  const bare = loc.pathname.startsWith('/present')
+  const bare = loc.pathname.startsWith('/present') || loc.pathname === '/'
   const fullBleed = active.workbench
   return (
     <div className="flex h-dvh flex-col overflow-hidden bg-canvas">
@@ -167,12 +167,12 @@ export function AppShell() {
       </a>
       {!bare && (
         <header className="no-print relative z-40 flex h-14 shrink-0 items-center gap-2 border-b border-line bg-white px-3 md:px-5">
-          <Link to="/" className="flex items-center gap-2.5 rounded-md pr-2 outline-none focus-visible:ring-2 focus-visible:ring-accent/30" aria-label="FiberScope workbench">
+          <Link to="/" className="flex items-center gap-2.5 rounded-md pr-2 outline-none focus-visible:ring-2 focus-visible:ring-accent/30" aria-label="FiberScope home">
             <Logo className="size-7" />
             <span className="text-[15.5px] font-semibold tracking-tight text-ink">FiberScope</span>
           </Link>
           <nav aria-label="Main" className="mx-auto hidden items-center md:flex">
-            <NavLink to="/" className={navCls(active.workbench)} aria-current={active.workbench ? 'page' : undefined}>
+            <NavLink to="/workbench" className={navCls(active.workbench)} aria-current={active.workbench ? 'page' : undefined}>
               Workbench
               <Underline on={active.workbench} />
             </NavLink>
