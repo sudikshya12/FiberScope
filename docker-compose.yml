@@ -1,0 +1,46 @@
+# FiberScope — `docker compose up --build` then open http://localhost:8080
+# Simulation mode only by default (no privileges). The Linux lab is an opt-in profile.
+name: fiberscope
+
+services:
+  api:
+    build: ./backend
+    environment:
+      FIBERSCOPE_DATABASE_URL: sqlite:////data/fiberscope.db
+      FIBERSCOPE_LINUX_LAB_ENABLED: ${FIBERSCOPE_LINUX_LAB_ENABLED:-0}
+      FIBERSCOPE_LAB_RUNNER_URL: http://127.0.0.1:8765
+      FIBERSCOPE_LAB_RUNNER_TOKEN: ${FIBERSCOPE_LAB_RUNNER_TOKEN:-}
+      FIBERSCOPE_CORS_ORIGINS: http://localhost:8080
+    volumes:
+      - fiberscope-data:/data
+    ports:
+      - "127.0.0.1:8077:8077"
+    restart: unless-stopped
+
+  web:
+    build: ./frontend
+    depends_on:
+      - api
+    ports:
+      - "127.0.0.1:8080:8080"
+    restart: unless-stopped
+
+  # OPTIONAL / EXPERIMENTAL — Linux hosts or a dedicated Linux VM only.
+  #   FIBERSCOPE_LINUX_LAB_ENABLED=1 FIBERSCOPE_LAB_ENABLE=1 FIBERSCOPE_LAB_RUNNER_TOKEN=$(openssl rand -hex 24) \
+  #     docker compose --profile linux-lab up --build
+  # The runner shares only the api container's network namespace (so the API reaches it on
+  # 127.0.0.1); all lab interfaces live in separate fslab-* namespaces it creates. The host's
+  # interfaces, routes, DNS and firewall are never touched. Not validated in the authoring environment.
+  labrunner:
+    profiles: ["linux-lab"]
+    build: ./labrunner
+    network_mode: "service:api"
+    cap_add: [NET_ADMIN, SYS_ADMIN]
+    environment:
+      FIBERSCOPE_LAB_ENABLE: ${FIBERSCOPE_LAB_ENABLE:-}
+      FIBERSCOPE_LAB_RUNNER_TOKEN: ${FIBERSCOPE_LAB_RUNNER_TOKEN:-}
+    depends_on:
+      - api
+
+volumes:
+  fiberscope-data:
