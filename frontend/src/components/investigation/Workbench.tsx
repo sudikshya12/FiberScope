@@ -448,17 +448,19 @@ export function Workbench({ topo, inv, investigations }: { topo: Topology; inv?:
               focus={focus}
               initialMode={narrow ? 'list' : 'graph'}
               note={inv ? null : 'Inventory model — not observed device health'}
+              actions={
+                inv ? (
+                  <div className="mr-1 hidden items-center overflow-hidden rounded-md border border-line md:flex" role="group" aria-label="Investigation tools">
+                    {(['check', 'case', 'repair'] as const).map((m) => (
+                      <button key={m} onClick={() => setPanel(m)} aria-pressed={panel === m} className={clsx('flex h-7 items-center gap-1.5 border-r border-line-2 px-2.5 text-[12.5px] font-medium last:border-r-0', panel === m ? 'bg-accent-soft text-accent-strong' : 'text-ink hover:bg-canvas')}>
+                        {m === 'check' ? <Stethoscope className="size-3.5 text-muted" aria-hidden /> : m === 'case' ? <ClipboardList className="size-3.5 text-muted" aria-hidden /> : <Wrench className="size-3.5 text-muted" aria-hidden />}
+                        {PANEL_TITLE[m]}
+                      </button>
+                    ))}
+                  </div>
+                ) : null
+              }
             />
-            {inv && !panel && (
-              <motion.div initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="absolute right-3 top-[52px] z-10 hidden flex-col overflow-hidden rounded-lg border border-line bg-white shadow-[var(--shadow-lift)] md:flex" role="group" aria-label="Investigation tools">
-                {(['check', 'case', 'repair'] as const).map((m) => (
-                  <button key={m} onClick={() => setPanel(m)} className="flex items-center gap-2 border-b border-line-2 px-3 py-2 text-left text-[12.5px] font-medium text-ink last:border-b-0 hover:bg-accent-soft hover:text-accent-strong">
-                    {m === 'check' ? <Stethoscope className="size-3.5 text-muted" aria-hidden /> : m === 'case' ? <ClipboardList className="size-3.5 text-muted" aria-hidden /> : <Wrench className="size-3.5 text-muted" aria-hidden />}
-                    {PANEL_TITLE[m]}
-                  </button>
-                ))}
-              </motion.div>
-            )}
           </div>
           {inv && <Tray inv={inv} open={trayOpen} setOpen={setTrayOpen} tab={trayTab} setTab={setTrayTab} fresh={fresh} />}
         </div>

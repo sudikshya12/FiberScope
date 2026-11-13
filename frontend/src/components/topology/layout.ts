@@ -14,9 +14,9 @@ export const PHYSICAL: Record<string, NodeLayout> = {
   'srv-b': { x: 0, y: 290, ports: { 'srv-b:eth0': 'right' } },
   'pp-01': { x: 330, y: 130, ports: { 'pp-01:F01': 'left', 'pp-01:F02': 'left', 'pp-01:F03': 'left', 'pp-01:R01': 'right', 'pp-01:R02': 'right', 'pp-01:R03': 'right' } },
   'pp-02': { x: 610, y: 130, ports: { 'pp-02:R01': 'left', 'pp-02:R02': 'left', 'pp-02:R03': 'left', 'pp-02:F01': 'right', 'pp-02:F02': 'right', 'pp-02:F03': 'right' } },
-  'asw-1': { x: 890, y: 30, ports: { 'asw-1:Ethernet1/1': 'left', 'asw-1:Ethernet1/49': 'bottom', 'asw-1:Ethernet1/50': 'right' } },
+  'asw-1': { x: 890, y: 30, ports: { 'asw-1:Ethernet1/1': 'left', 'asw-1:Ethernet1/49': 'bottom', 'asw-1:Ethernet1/50': 'top' } },
   'asw-2': { x: 890, y: 290, ports: { 'asw-2:Ethernet1/49': 'top', 'asw-2:Ethernet1/1': 'left', 'asw-2:Ethernet1/2': 'left' } },
-  'gw-1': { x: 1200, y: 30, ports: { 'gw-1:xe-0/0/0': 'left' } },
+  'gw-1': { x: 890, y: -140, ports: { 'gw-1:xe-0/0/0': 'bottom' } },
 }
 
 export const LOGICAL: Record<string, NodeLayout> = {

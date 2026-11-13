@@ -28,6 +28,8 @@ interface Props {
   /** Short status note shown on the canvas (e.g. inventory-model disclaimer). */
   note?: string | null
   initialMode?: 'graph' | 'list'
+  /** Extra controls rendered at the right of the canvas header (e.g. investigation tools). */
+  actions?: React.ReactNode
 }
 
 const fiberShort = (f: string | null) => (f ? f.split(' ')[0] : '')
@@ -161,7 +163,7 @@ function Legend() {
   )
 }
 
-function Inner({ topo, obs, selection, onSelect, focus, height = 'h-full', compactToolbar, initialView = 'physical', autoTrace, note, initialMode = 'graph' }: Props) {
+function Inner({ topo, obs, selection, onSelect, focus, height = 'h-full', compactToolbar, initialView = 'physical', autoTrace, note, initialMode = 'graph', actions }: Props) {
   const [view, setView] = useState<View>(initialView)
   const [mode, setMode] = useState<'graph' | 'list'>(initialMode)
   const [vlan, setVlan] = useState<number | null>(null)
@@ -235,6 +237,7 @@ function Inner({ topo, obs, selection, onSelect, focus, height = 'h-full', compa
           </>
         )}
         <div className="ml-auto flex items-center gap-1">
+          {actions}
           <Legend />
           {mode === 'graph' && (
             <Tip content="Fit to screen">
